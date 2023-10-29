@@ -7,7 +7,13 @@ import ru.practicum.explorewithme.dto.EndpointDto;
 import ru.practicum.explorewithme.dto.ViewStatsDto;
 import ru.practicum.explorewithme.service.StatService;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+
+import static ru.practicum.explorewithme.Constants.DATE_TIME_PATTERN;
 
 @RestController
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -25,6 +31,11 @@ public class StatController {
                                                @RequestParam String end,
                                                @RequestParam(required = false) Collection<String> uris,
                                                @RequestParam(defaultValue = "false") Boolean unique) {
-        return statService.getStatHit(start, end, uris, unique);
+        return statService.getStatHit(getDateFromEncodedString(start), getDateFromEncodedString(end), uris, unique);
+    }
+
+    private LocalDateTime getDateFromEncodedString(String date) {
+        return LocalDateTime.parse(URLDecoder.decode(date, StandardCharsets.UTF_8),
+                DateTimeFormatter.ofPattern(DATE_TIME_PATTERN));
     }
 }

@@ -31,20 +31,13 @@ public class StatServiceImpl implements StatService {
     }
 
     @Override
-    public Collection<ViewStatsDto> getStatHit(String start, String end, Collection<String> uris, boolean unique) {
-        LocalDateTime startDate = getDateFromEncodedString(start);
-        LocalDateTime endDate = getDateFromEncodedString(end);
+    public Collection<ViewStatsDto> getStatHit(LocalDateTime start, LocalDateTime end, Collection<String> uris, boolean unique) {
         if (unique) {
-            return statRepository.countStatByStartEndUrisUniqueIps(startDate, endDate, uris)
+            return statRepository.countStatByStartEndUrisUniqueIps(start, end, uris)
                     .stream().map(statMapper::statsToStatsDto).collect(Collectors.toList());
         } else {
-            return statRepository.countStatByStartEndUris(startDate, endDate, uris)
+            return statRepository.countStatByStartEndUris(start, end, uris)
                     .stream().map(statMapper::statsToStatsDto).collect(Collectors.toList());
         }
-    }
-
-    private LocalDateTime getDateFromEncodedString(String date) {
-        return LocalDateTime.parse(URLDecoder.decode(date, StandardCharsets.UTF_8),
-                DateTimeFormatter.ofPattern(DATE_TIME_PATTERN));
     }
 }
