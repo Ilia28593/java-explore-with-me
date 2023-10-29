@@ -3,14 +3,14 @@ package ru.practicum.explorewithme.mapper;
 import org.mapstruct.Mapper;
 import ru.practicum.explorewithme.dto.EndpointDto;
 import ru.practicum.explorewithme.dto.ViewStatsDto;
-import ru.practicum.explorewithme.model.Endpoint;
+import ru.practicum.explorewithme.model.EndpointHit;
 import ru.practicum.explorewithme.model.ViewStats;
 
 @Mapper(componentModel = "spring")
 public interface StatMapper {
-    EndpointDto endpointToEndPointDto(Endpoint endpointHit);
+    EndpointDto endpointToEndPointDto(EndpointHit endpointHit);
 
-    Endpoint endpointDtoToEndPoint(EndpointDto endpointHitDto);
+    EndpointHit endpointDtoToEndPoint(EndpointDto endpointHitDto);
 
     ViewStatsDto statsToStatsDto(ViewStats viewStats);
 

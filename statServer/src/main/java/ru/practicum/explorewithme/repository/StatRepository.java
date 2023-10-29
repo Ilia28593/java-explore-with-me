@@ -2,13 +2,13 @@ package ru.practicum.explorewithme.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.practicum.explorewithme.model.Endpoint;
+import ru.practicum.explorewithme.model.EndpointHit;
 import ru.practicum.explorewithme.model.ViewStats;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-public interface StatRepository extends JpaRepository<Endpoint, Long> {
+public interface StatRepository extends JpaRepository<EndpointHit, Long> {
     @Query("select new ru.practicum.explorewithme.model.ViewStats(eh.app, eh.uri, count(1))" +
             "from EndpointHit as eh " +
             "where eh.timeStamp >= :start and eh.timeStamp < :end " +
