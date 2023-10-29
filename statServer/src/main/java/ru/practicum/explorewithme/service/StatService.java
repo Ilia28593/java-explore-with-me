@@ -1,6 +1,5 @@
 package ru.practicum.explorewithme.service;
 
-import ru.practicum.explorewithme.dto.EndpointDto;
 import ru.practicum.explorewithme.dto.EndpointHitDto;
 import ru.practicum.explorewithme.dto.ViewStatsDto;
 

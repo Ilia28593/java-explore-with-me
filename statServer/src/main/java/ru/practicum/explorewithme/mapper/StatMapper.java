@@ -1,7 +1,6 @@
 package ru.practicum.explorewithme.mapper;
 
 import org.mapstruct.Mapper;
-import ru.practicum.explorewithme.dto.EndpointDto;
 import ru.practicum.explorewithme.dto.EndpointHitDto;
 import ru.practicum.explorewithme.dto.ViewStatsDto;
 import ru.practicum.explorewithme.model.EndpointHit;

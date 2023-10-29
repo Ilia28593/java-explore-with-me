@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.controller.client.StatClient;
-import ru.practicum.explorewithme.dto.EndpointDto;
+import ru.practicum.explorewithme.dto.EndpointHitDto;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -19,7 +19,7 @@ public class StatController {
     private final StatClient statClient;
 
     @PostMapping("/hit")
-    public ResponseEntity<Object> createStatHit(@RequestBody @Validated EndpointDto endpointDto) {
+    public ResponseEntity<Object> createStatHit(@RequestBody @Validated EndpointHitDto endpointDto) {
         return statClient.createStat(endpointDto);
     }
 

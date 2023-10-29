@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.explorewithme.dto.EndpointDto;
+import ru.practicum.explorewithme.dto.EndpointHitDto;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -31,7 +31,7 @@ public class StatClient extends BaseClient {
                 .build());
     }
 
-    public ResponseEntity<Object> createStat(EndpointDto endpointDto) {
+    public ResponseEntity<Object> createStat(EndpointHitDto endpointDto) {
         return post("hit", endpointDto);
     }
 
