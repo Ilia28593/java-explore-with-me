@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class EndpointDto {
+public class EndpointHitDto {
     private Long id;
     @NotEmpty
     private String app;
