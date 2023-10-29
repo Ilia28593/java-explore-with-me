@@ -8,14 +8,9 @@ import ru.practicum.explorewithme.dto.ViewStatsDto;
 import ru.practicum.explorewithme.mapper.StatMapper;
 import ru.practicum.explorewithme.repository.StatRepository;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.stream.Collectors;
-
-import static ru.practicum.explorewithme.Constants.DATE_TIME_PATTERN;
 
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
