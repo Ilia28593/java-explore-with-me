@@ -1,4 +1,4 @@
-package ru.practicum.model.dto;
+package ru.practicum.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -7,12 +7,11 @@ import lombok.RequiredArgsConstructor;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+import static ru.practicum.constants.Constant.DATA_FORMAT_PATTERN;
+
 @Data
 @RequiredArgsConstructor
-public class GetEndpointHitDto {
-
-    private static final String DATA_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
-
+public class EndpointHitDto {
     @NotNull
     private String app;
     @NotNull

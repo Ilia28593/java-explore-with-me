@@ -1,6 +1,7 @@
 package ru.practicum.model;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,16 +9,15 @@ import java.time.LocalDateTime;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "EndpointHit", schema = "public")
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
+@Accessors(chain = true)
+@Table(name = "EndpointHit", schema = "public")
 public class EndpointHit {
-
-
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
