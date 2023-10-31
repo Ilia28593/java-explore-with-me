@@ -10,7 +10,7 @@ services:
       - POSTGRES_PASSWORD=root
 
   stats-service:
-    build: statServer/
+    build: statserver/
     ports:
       - "9091:9091"
     environment:
@@ -22,7 +22,7 @@ services:
       - stats-db
 
   stats-server:
-    build: statGateway/
+    build: statgateway/
     ports:
       - "9090:9090"
     environment:
@@ -32,7 +32,7 @@ services:
       - stats-service
 
   ewm-service:
-    build: exploreServer/
+    build: exploreserver/
     ports:
       - "8080:8080"
     environment:
