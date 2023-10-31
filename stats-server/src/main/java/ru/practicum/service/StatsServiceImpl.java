@@ -3,17 +3,15 @@ package ru.practicum.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.ResponseEndpointHitDto;
 import ru.practicum.mapper.EndpointHitMapper;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.model.ViewStats;
-import ru.practicum.dto.EndpointHitDto;
-import ru.practicum.dto.ResponseEndpointHitDto;
 import ru.practicum.repository.StatsRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
