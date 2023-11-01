@@ -25,6 +25,7 @@ public class StatServiceImpl implements StatService {
                 statRepository.save(statMapper.endpointHitDtoToEndPointHit(hit))
         );
     }
+
     @Override
     public Collection<ViewStatsDto> getStatHit(LocalDateTime start, LocalDateTime end, Collection<String> uris, boolean unique) {
         Collection<ViewStats> viewStats;
