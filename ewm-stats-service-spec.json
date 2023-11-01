@@ -1,1 +1,45 @@
-
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Stat service API",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:9090",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "StatsController",
+      "description": "API для работы со статистикой посещений"
+    }
+  ],
+  "paths": {
+    "/stats": {
+      "get": {
+        "tags": [
+          "StatsController"
+        ],
+        "summary": "Получение статистики по посещениям. Обратите внимание: значение даты и времени нужно закодировать (например используя java.net.URLEncoder.encode) ",
+        "operationId": "getStats",
+        "responses": {
+          "200": {
+            "description": "Статистика собрана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ViewStats"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
