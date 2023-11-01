@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.dto.EndpointHitDto;
 import ru.practicum.explorewithme.dto.ViewStatsDto;
 import ru.practicum.explorewithme.mapper.StatMapper;
+import ru.practicum.explorewithme.model.EndpointHit;
 import ru.practicum.explorewithme.model.ViewStats;
 import ru.practicum.explorewithme.repository.StatRepository;
 
@@ -20,10 +21,8 @@ public class StatServiceImpl implements StatService {
     private final StatMapper statMapper;
 
     @Override
-    public EndpointHitDto createStatHit(EndpointHitDto hit) {
-        return statMapper.endpointHitToEndPointHitDto(
-                statRepository.save(statMapper.endpointHitDtoToEndPointHit(hit))
-        );
+    public EndpointHit createStatHit(EndpointHitDto hit) {
+        return statRepository.save(statMapper.endpointHitDtoToEndPointHit(hit));
     }
 
     @Override

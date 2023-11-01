@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.dto.EndpointHitDto;
 import ru.practicum.explorewithme.dto.ViewStatsDto;
+import ru.practicum.explorewithme.model.EndpointHit;
 import ru.practicum.explorewithme.service.StatService;
 
 import java.net.URLDecoder;
@@ -22,7 +23,7 @@ public class StatController {
     private final StatService statService;
 
     @PostMapping("/hit")
-    public EndpointHitDto createStatHit(@RequestBody EndpointHitDto endpointHitDto) {
+    public EndpointHit createStatHit(@RequestBody EndpointHitDto endpointHitDto) {
         return statService.createStatHit(endpointHitDto);
     }
 
