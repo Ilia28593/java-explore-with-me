@@ -14,7 +14,7 @@
 
     <groupId>ru.practicum</groupId>
     <artifactId>explore-with-me</artifactId>
-    <version>${revision}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -25,7 +25,6 @@
         <lombok.version>1.18.24</lombok.version>
         <querydsl.version>5.0.0</querydsl.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
-        <revision>0.0.1-SNAPSHOT</revision>
     </properties>
 
     <modules>
