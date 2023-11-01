@@ -27,7 +27,7 @@ services:
       - "9090:9090"
     environment:
       - SERVER_PORT=9090
-      - STATS_SERVICE_URL=http://stats-service:9090
+      - STATS_SERVICE_URL=http://stats-service:9091
     depends_on:
       - stats-service
 
