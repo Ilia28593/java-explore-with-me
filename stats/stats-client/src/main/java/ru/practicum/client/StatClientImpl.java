@@ -11,9 +11,9 @@ import ru.practicum.EndpointDto;
 import ru.practicum.StatsDto;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -32,42 +32,22 @@ public class StatClientImpl implements StatClient {
     @Override
     public ResponseEntity<String> saveHit(String app, String uri, String ip, LocalDateTime timestamp) {
         prepareHeader();
-
-        EndpointDto endpointDto = EndpointDto.builder()
-                .app(app)
-                .uri(uri)
-                .ip(ip)
-                .timestamp(timestamp)
-                .build();
-
-        HttpEntity<EndpointDto> entity = new HttpEntity<>(endpointDto, headers);
-
-        return this.restTemplate.postForEntity(
-                serverURL + "/hit",
-                entity,
-                String.class);
+        EndpointDto endpointDto = EndpointDto.builder().app(app).uri(uri).ip(ip).timestamp(timestamp).build();
+        return this.restTemplate.postForEntity(serverURL + "/hit", new HttpEntity<>(endpointDto, headers), String.class);
     }
 
     @SneakyThrows
     @Override
-    public ResponseEntity<List<StatsDto>> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+    public ResponseEntity<Collection<StatsDto>> getStats(LocalDateTime start, LocalDateTime end, Collection<String> uris, Boolean unique) {
         prepareHeader();
-
         Map<String, Object> params = new HashMap<>();
         params.put("start", start);
         params.put("end", end);
         params.put("uris", uris);
         params.put("unique", unique);
 
-        HttpEntity request = new HttpEntity(headers);
-
-        return restTemplate.exchange(
-                serverURL + "/stats?start={start}&end={end}&uris={uris}&unique={unique}",
-                HttpMethod.GET,
-                request,
-                new ParameterizedTypeReference<>() {
-                },
-                params
-        );
+        return restTemplate.exchange(serverURL + "/stats?start={start}&end={end}&uris={uris}&unique={unique}",
+                HttpMethod.GET, new HttpEntity(headers), new ParameterizedTypeReference<>() {
+                }, params);
     }
 }
