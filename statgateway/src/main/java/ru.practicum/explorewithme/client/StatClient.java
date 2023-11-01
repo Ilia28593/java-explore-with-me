@@ -33,6 +33,7 @@ public class StatClient extends BaseClient {
         );
     }
 
+
     public ResponseEntity<Object> createStatHit(EndpointHitDto endpointHitDto) {
         return post("hit", endpointHitDto);
     }
