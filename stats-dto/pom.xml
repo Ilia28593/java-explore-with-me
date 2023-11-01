@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>stats</artifactId>
         <groupId>ru.practicum</groupId>
-        <version>${revision}</version>
+        <artifactId>explore-with-me</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>stats-dto</artifactId>
