@@ -10,7 +10,10 @@ import ru.practicum.StatsDto;
 import ru.practicum.service.StatService;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+
+import static ru.practicum.constant.Constants.DATA_TIME_PATTERN;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,16 +22,16 @@ public class StatController {
 
     @PostMapping(path = "/hit")
     public ResponseEntity<String> saveHit(@Validated @RequestBody EndpointDto endpointDto) {
-        return statService.saveHit(endpointDto);
+        return ResponseEntity.ok(statService.createStatHit(endpointDto));
     }
 
     @GetMapping(path = "/stats")
-    public ResponseEntity<List<StatsDto>> getStats(
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+    public ResponseEntity<Collection<StatsDto>> getStats(
+            @RequestParam @DateTimeFormat(pattern = DATA_TIME_PATTERN) LocalDateTime start,
+            @RequestParam @DateTimeFormat(pattern = DATA_TIME_PATTERN) LocalDateTime end,
             @RequestParam(required = false) List<String> uris,
             @RequestParam(defaultValue = "false") boolean unique
     ) {
-        return statService.getStats(start, end, uris, unique);
+        return ResponseEntity.ok(statService.getStatHit(start, end, uris, unique));
     }
 }
