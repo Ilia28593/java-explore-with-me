@@ -19,11 +19,11 @@ public class StatServiceImpl implements StatService {
     private final EndpointMapper endpointMapper;
 
     @Override
-    public String createStatHit(EndpointDto endpointDto) {
+    public Endpoint createStatHit(EndpointDto endpointDto) {
         Endpoint endpoint = endpointMapper.toEndpoint(endpointDto);
         statRepository.save(endpoint);
 
-        return "Информация сохранена";
+        return statRepository.save(endpoint);
     }
 
     @Override

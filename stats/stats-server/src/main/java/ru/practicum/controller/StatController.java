@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.EndpointDto;
 import ru.practicum.StatsDto;
+import ru.practicum.model.Endpoint;
 import ru.practicum.service.StatService;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class StatController {
     private final StatService statService;
 
     @PostMapping(path = "/hit")
-    public ResponseEntity<String> saveHit(@Validated @RequestBody EndpointDto endpointDto) {
+    public ResponseEntity<Endpoint> saveHit(@Validated @RequestBody EndpointDto endpointDto) {
         return ResponseEntity.ok(statService.createStatHit(endpointDto));
     }
 
