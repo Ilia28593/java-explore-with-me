@@ -11,7 +11,6 @@ import ru.practicum.repository.StatRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +25,7 @@ public class StatServiceImpl implements StatService {
 
         return "Информация сохранена";
     }
+
     @Override
     public Collection<StatsDto> getStatHit(LocalDateTime start, LocalDateTime end, Collection<String> uris, boolean isUnique) {
         Collection<StatsDto> viewStats = new ArrayList<>();
