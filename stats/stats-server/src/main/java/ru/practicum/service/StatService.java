@@ -20,7 +20,7 @@ public class StatService {
     private final EndpointMapper endpointMapper;
 
     public ResponseEntity<String> saveHit(EndpointDto endpointDto) {
-        Endpoint endpoint = endpointMapper.toEndpoint( endpointDto);
+        Endpoint endpoint = endpointMapper.toEndpoint(endpointDto);
         statRepository.save(endpoint);
 
         return new ResponseEntity<>("Информация сохранена", HttpStatus.CREATED);
