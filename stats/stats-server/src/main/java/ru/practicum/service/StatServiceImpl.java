@@ -10,7 +10,6 @@ import ru.practicum.repository.StatRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,31 +19,23 @@ public class StatServiceImpl implements StatService {
 
     @Override
     public Endpoint createStatHit(EndpointDto endpointDto) {
-        Endpoint endpoint = endpointMapper.toEndpoint(endpointDto);
-        statRepository.save(endpoint);
-
-        return statRepository.save(endpoint);
+        return statRepository.save(endpointMapper.toEndpoint(endpointDto));
     }
 
     @Override
     public Collection<StatsDto> getStatHit(LocalDateTime start, LocalDateTime end, Collection<String> uris, boolean isUnique) {
-        List<StatsDto> stats;
-
         if (uris != null && !uris.isEmpty()) {
-
             if (isUnique) {
-                stats = statRepository.getUniqueStatsByUrisAndBetweenStartAndEndGroupByUri(start, end, uris);
+                return statRepository.getUniqueStatsByUrisAndBetweenStartAndEndGroupByUri(start, end, uris);
             } else {
-                stats = statRepository.getStatsByUrisAndBetweenStartAndEndGroupByUri(start, end, uris);
+                return statRepository.getStatsByUrisAndBetweenStartAndEndGroupByUri(start, end, uris);
             }
         } else {
             if (isUnique) {
-                stats = statRepository.getUniqueStatsBetweenStartAndEndGroupByUri(start, end);
+                return statRepository.getUniqueBetweenStartAndEndGroupByUri(start, end);
             } else {
-                stats = statRepository.getStatsBetweenStartAndEndGroupByUri(start, end);
+                return statRepository.getStatsBetweenStartAndEndGroupByUri(start, end);
             }
         }
-
-        return stats;
     }
 }

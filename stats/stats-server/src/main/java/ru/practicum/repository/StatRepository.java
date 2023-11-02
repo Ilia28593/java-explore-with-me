@@ -28,7 +28,7 @@ public interface StatRepository extends JpaRepository<Endpoint, Integer> {
             "WHERE (h.timestamp BETWEEN :start AND :end) " +
             "GROUP BY h.uri, h.app " +
             "ORDER BY COUNT(DISTINCT(h.ip)) DESC")
-    List<StatsDto> getUniqueStatsBetweenStartAndEndGroupByUri(
+    List<StatsDto> getUniqueBetweenStartAndEndGroupByUri(
             LocalDateTime start,
             LocalDateTime end
     );
