@@ -13,6 +13,7 @@ import static ru.practicum.constant.Constants.DATA_TIME_PATTERN;
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
 @Accessors(chain = true)
 public class EndpointDto {
