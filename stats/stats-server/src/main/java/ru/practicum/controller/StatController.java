@@ -11,7 +11,6 @@ import ru.practicum.service.StatService;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 
 import static ru.practicum.constant.Constants.DATA_TIME_PATTERN;
 
@@ -26,11 +25,10 @@ public class StatController {
     }
 
     @GetMapping(path = "/stats")
-    public ResponseEntity<Collection<StatsDto>> getStats(
-            @RequestParam @DateTimeFormat(pattern = DATA_TIME_PATTERN) LocalDateTime start,
-            @RequestParam @DateTimeFormat(pattern = DATA_TIME_PATTERN) LocalDateTime end,
-            @RequestParam(required = false) List<String> uris,
-            @RequestParam(defaultValue = "false") boolean unique
+    public ResponseEntity<Collection<StatsDto>> getStats(@RequestParam @DateTimeFormat(pattern = DATA_TIME_PATTERN) LocalDateTime start,
+                                                         @RequestParam @DateTimeFormat(pattern = DATA_TIME_PATTERN) LocalDateTime end,
+                                                         @RequestParam(required = false) Collection<String> uris,
+                                                         @RequestParam(defaultValue = "false") boolean unique
     ) {
         return ResponseEntity.ok(statService.getStatHit(start, end, uris, unique));
     }
