@@ -28,10 +28,6 @@
         <revision>0.0.1-SNAPSHOT</revision>
     </properties>
 
-    <modules>
-        <module>ewm-service</module>
-        <module>stats</module>
-    </modules>
     <build>
         <pluginManagement>
             <plugins>
