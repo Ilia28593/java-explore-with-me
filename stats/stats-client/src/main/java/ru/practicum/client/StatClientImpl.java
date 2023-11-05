@@ -2,22 +2,26 @@ package ru.practicum.client;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.EndpointDto;
 import ru.practicum.StatsDto;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StatClientImpl implements StatClient {
     @Value("${stats-server.url}")
     private final String serverURL;
@@ -61,5 +65,25 @@ public class StatClientImpl implements StatClient {
                 },
                 params
         );
+    }
+
+    public List<StatsDto> getStats(List<String> uris) {
+        if (uris == null || uris.size() == 0) return new ArrayList<>();
+        log.info("URIS:");
+        log.info(uris.toString());
+
+        String baseUrl = serverURL + "/stats";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
+                .queryParam("uris", StringUtils.join(uris, ','))
+                .queryParam("start","2000-01-01 00:00:00")
+                .queryParam("end",LocalDateTime.now().format(formatter)
+                ).build();
+
+
+        StatsDto[] stats = restTemplate.getForObject(uri.toString(), StatsDto[].class);
+
+        return Arrays.stream(stats).collect(Collectors.toUnmodifiableList());
     }
 }

@@ -4,6 +4,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.practicum.StatsDto;
+import ru.practicum.client.StatClientImpl;
 import ru.practicum.ewm.PaginationHelper;
 import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.category.CategoryMapper;
@@ -27,8 +29,6 @@ import ru.practicum.ewm.request.enums.ParticipationRequestStatus;
 import ru.practicum.ewm.request.enums.ParticipationRequestStatusUpdate;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
-import ru.practicum.stats.client.StatsClient;
-import ru.practicum.stats.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
-    private final StatsClient statsClient;
+    private final StatClientImpl statsClient;
 
     private final CategoryMapper categoryMapper;
 
@@ -59,7 +59,7 @@ public class EventServiceImpl implements EventService {
                 .map(id -> "/events/" + id.toString())
                 .collect(Collectors.toUnmodifiableList());
 
-        List<ViewStatsDto> eventStats = statsClient.getStats(uris);
+        List<StatsDto> eventStats = statsClient.getStats(uris);
 
         Map<Long, Long> views = eventStats.stream()
                 .filter(statRecord -> statRecord.getApp().equals("ewm-service"))
@@ -69,7 +69,7 @@ public class EventServiceImpl implements EventService {
                                     Matcher matcher = pattern.matcher(statRecord.getUri());
                                     return Long.parseLong(matcher.group(1));
                                 },
-                                ViewStatsDto::getHits
+                                StatsDto::getHits
                         )
                 );
         return views;
