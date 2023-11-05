@@ -30,7 +30,7 @@ public class UserAdminController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<UserDto>> getUsers(@RequestParam(required = false) List<Long> ids,
+    public ResponseEntity<List<UserDto>> getUsers(@RequestParam(required = false) List<Long> ids,
                                                         @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                         @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         return new ResponseEntity<>(userService.getUsersAdmin(ids, from, size), HttpStatus.OK);

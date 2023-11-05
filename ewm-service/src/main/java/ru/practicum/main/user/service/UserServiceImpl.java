@@ -15,7 +15,6 @@ import ru.practicum.main.user.mapper.UserMapper;
 import ru.practicum.main.user.model.User;
 import ru.practicum.main.user.repository.UserRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Collection<UserDto> getUsersAdmin(List<Long> ids, Integer from, Integer size) {
+    public List<UserDto> getUsersAdmin(List<Long> ids, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
         if (ids == null || ids.size() == 0) {
             return userRepository.findAll(pageable).stream()
