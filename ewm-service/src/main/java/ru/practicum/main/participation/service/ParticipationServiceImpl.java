@@ -8,14 +8,13 @@ import ru.practicum.main.event.model.Event;
 import ru.practicum.main.event.model.State;
 import ru.practicum.main.event.model.Status;
 import ru.practicum.main.event.repository.EventRepository;
+import ru.practicum.main.exception.DuplicateParticipationException;
 import ru.practicum.main.exception.NotFoundException;
 import ru.practicum.main.exception.OverflowLimitException;
-import ru.practicum.main.exception.DuplicateParticipationException;
-import ru.practicum.main.participation.mapper.ParticipationMapper;
 import ru.practicum.main.participation.dto.ParticipationRequestDto;
+import ru.practicum.main.participation.mapper.ParticipationMapper;
 import ru.practicum.main.participation.model.ParticipationRequest;
 import ru.practicum.main.participation.repository.ParticipationRepository;
-import ru.practicum.main.user.repository.UserRepository;
 import ru.practicum.main.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -34,7 +33,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Transactional
     @Override
     public List<ParticipationRequestDto> getParticipationRequestPrivate(Long userId) {
-        if (userRepository. getUserById(userId) == null) {
+        if (userRepository.getUserById(userId) == null) {
             throw new NotFoundException("User not found.");
         }
         List<Long> eventIds = eventRepository.getEventsByInitiatorId(userId)
