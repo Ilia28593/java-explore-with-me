@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Collection<User> getUsersByIdIn(List<Long> ids, Pageable pageable);
 
     void removeUserById(Long userId);
+
+    User getUserById(Long userId);
 }

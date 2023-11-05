@@ -7,26 +7,36 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.stats.StatsClient;
+import ru.practicum.statsDto.EndpointHitDto;
+import ru.practicum.statsDto.ViewStats;
 import ru.practicum.main.category.model.Category;
 import ru.practicum.main.category.repository.CategoryRepository;
-import ru.practicum.main.event.dto.*;
 import ru.practicum.main.event.mapper.EventMapper;
+import ru.practicum.main.event.dto.EventFullDto;
+import ru.practicum.main.event.dto.EventRequestStatusUpdateRequest;
+import ru.practicum.main.event.dto.EventRequestStatusUpdateResult;
+import ru.practicum.main.event.dto.EventShortDto;
+import ru.practicum.main.event.dto.NewEventDto;
+import ru.practicum.main.event.dto.UpdateEventAdminRequest;
+import ru.practicum.main.event.dto.UpdateEventUserRequest;
 import ru.practicum.main.event.model.Event;
 import ru.practicum.main.event.model.State;
 import ru.practicum.main.event.model.Status;
 import ru.practicum.main.event.repository.EventRepository;
-import ru.practicum.main.exception.*;
+import ru.practicum.main.exception.EventDateException;
+import ru.practicum.main.exception.NotFoundException;
+import ru.practicum.main.exception.OverflowLimitException;
+import ru.practicum.main.exception.StateArgumentException;
+import ru.practicum.main.exception.StatusPerticipationRequestException;
 import ru.practicum.main.location.model.Location;
 import ru.practicum.main.location.repository.LocationRepository;
-import ru.practicum.main.participation.dto.ParticipationRequestDto;
 import ru.practicum.main.participation.mapper.ParticipationMapper;
+import ru.practicum.main.participation.dto.ParticipationRequestDto;
 import ru.practicum.main.participation.model.ParticipationRequest;
 import ru.practicum.main.participation.repository.ParticipationRepository;
 import ru.practicum.main.user.model.User;
-import ru.practicum.main.user.service.UserService;
-import ru.practicum.stats.StatsClient;
-import ru.practicum.statsDto.EndpointHitDto;
-import ru.practicum.statsDto.ViewStats;
+import ru.practicum.main.user.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -43,7 +53,7 @@ import static ru.practicum.main.constant.Constants.DATE_FORMAT;
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final ParticipationRepository participationRepository;
     private final LocationRepository locationRepository;
     private final StatsClient statsClient;
@@ -71,7 +81,7 @@ public class EventServiceImpl implements EventService {
         Location location = locationRepository.save(newEventDto.getLocation());
         newEventDto.setLocation(location);
         Category category = categoryRepository.getById(newEventDto.getCategory());
-        User user = userService.getUserById(userId);
+        User user = userRepository.getUserById(userId);
 
         Event event = EventMapper.toEvent(newEventDto, user, category);
         return EventMapper.toEventFullDto(eventRepository.save(event));
@@ -343,12 +353,11 @@ public class EventServiceImpl implements EventService {
                         .map(EventMapper::toEventFullDto)
                         .collect(Collectors.toList());
 
-            } else
-                list = eventRepository.getEventsByInitiatorIdInAndStateInAndCategoryIdInAndEventDateAfterAndEventDateBefore(
-                                users, stateEnum, categories, start, end, pageable)
-                        .stream()
-                        .map(EventMapper::toEventFullDto)
-                        .collect(Collectors.toList());
+            } else list = eventRepository.getEventsByInitiatorIdInAndStateInAndCategoryIdInAndEventDateAfterAndEventDateBefore(
+                            users, stateEnum, categories, start, end, pageable)
+                    .stream()
+                    .map(EventMapper::toEventFullDto)
+                    .collect(Collectors.toList());
         }
 
         return list;
