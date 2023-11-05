@@ -9,7 +9,6 @@ import ru.practicum.statsDto.EndpointHitDto;
 import ru.practicum.statsDto.ViewStats;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -28,22 +27,23 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<ViewStats> getStatHit(LocalDateTime start, LocalDateTime end, Collection<String> uris, boolean unique) {
+    public List<ViewStats> getStatHit(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
 
         if (end.isBefore(start)) {
-            throw new IllegalArgumentException("The time of end is not have before start");
+            throw new IllegalArgumentException("The time of the end cannot be earlier than the time of the beginning!");
         }
-        if (uris != null && !uris.isEmpty()) {
-            if (unique) {
-                return statsRepository.getUniqueStatsByUrisAndBetweenStartAndEndGroupByUri(start, end, uris);
+
+        if (!unique) {
+            if (uris == null) {
+                return statsRepository.findAllStats(start, end);
             } else {
-                return statsRepository.getStatsByUrisAndBetweenStartAndEndGroupByUri(start, end, uris);
+                return statsRepository.findStats(start, end, uris);
             }
         } else {
-            if (unique) {
-                return statsRepository.getUniqueBetweenStartAndEndGroupByUri(start, end);
+            if (uris == null) {
+                return statsRepository.findAllUniqueStats(start, end);
             } else {
-                return statsRepository.getStatsBetweenStartAndEndGroupByUri(start, end);
+                return statsRepository.findUniqueStats(start, end, uris);
             }
         }
     }
