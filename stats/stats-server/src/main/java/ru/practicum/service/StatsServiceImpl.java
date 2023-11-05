@@ -9,6 +9,7 @@ import ru.practicum.statsDto.EndpointHitDto;
 import ru.practicum.statsDto.ViewStats;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -27,7 +28,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<ViewStats> getStatHit(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
+    public List<ViewStats> getStatHit(LocalDateTime start, LocalDateTime end, Collection<String> uris, boolean unique) {
 
         if (end.isBefore(start)) {
             throw new IllegalArgumentException("The time of the end cannot be earlier than the time of the beginning!");

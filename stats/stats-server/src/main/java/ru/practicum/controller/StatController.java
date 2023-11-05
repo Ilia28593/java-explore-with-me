@@ -10,6 +10,7 @@ import ru.practicum.statsDto.EndpointHitDto;
 import ru.practicum.statsDto.ViewStats;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import static ru.practicum.constant.Constants.DATE_FORMAT;
@@ -31,7 +32,7 @@ public class StatController {
     @GetMapping("/stats")
     public List<ViewStats> getStats(@RequestParam @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime start,
                                     @RequestParam @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime end,
-                                    @RequestParam(required = false) String[] uris,
+                                    @RequestParam(required = false) Collection<String> uris,
                                     @RequestParam(defaultValue = "false") boolean unique) {
         return statsService.getStatHit(start, end, uris, unique);
     }
