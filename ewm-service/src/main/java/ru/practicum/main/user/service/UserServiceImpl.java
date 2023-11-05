@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.exception.DuplicateEmailException;
 import ru.practicum.main.exception.NotFoundException;
+import ru.practicum.main.user.dto.NewUserRequest;
 import ru.practicum.main.user.dto.UserDto;
-import ru.practicum.main.user.dto.UserRequest;
 import ru.practicum.main.user.mapper.UserMapper;
 import ru.practicum.main.user.model.User;
 import ru.practicum.main.user.repository.UserRepository;
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDto addUserAdmin(UserRequest userRequest) {
+    public UserDto addUserAdmin(NewUserRequest userRequest) {
         User user = UserMapper.toUser(userRequest);
         try {
             return UserMapper.toUserDto(userRepository.saveAndFlush(user));
