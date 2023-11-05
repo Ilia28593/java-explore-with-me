@@ -6,14 +6,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 
 @Getter
 @Setter
-@Builder
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
 public class EndpointHitDto {
 
     private Integer id;
