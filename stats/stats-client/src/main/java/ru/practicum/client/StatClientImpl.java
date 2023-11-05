@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.EndpointDto;
 import ru.practicum.StatsDto;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class StatClientImpl implements StatClient {
+    @Value("${spring.application.name}")
+    private final String application;
     @Value("${stats-server.url}")
     private final String serverURL;
     private final RestTemplate restTemplate;
