@@ -1,6 +1,7 @@
 package ru.practicum.main.user.model;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Data
-@Builder
+@Getter
+@Setter
+@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")

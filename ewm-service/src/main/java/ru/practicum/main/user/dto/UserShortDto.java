@@ -1,11 +1,13 @@
 package ru.practicum.main.user.dto;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
 public class UserShortDto {
 
     private Long id;
