@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Data
+@Builder
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
