@@ -16,6 +16,7 @@ import ru.practicum.main.user.model.User;
 import ru.practicum.main.user.repository.UserRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Collection<UserDto> getUsersAdmin(Collection<Long> ids, Integer from, Integer size) {
+    public Collection<UserDto> getUsersAdmin(List<Long> ids, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
         if (ids == null || ids.size() == 0) {
             return userRepository.findAll(pageable).stream()
@@ -63,7 +64,6 @@ public class UserServiceImpl implements UserService {
         userRepository.removeUserById(userId);
     }
 
-    @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException("User not found by id.");

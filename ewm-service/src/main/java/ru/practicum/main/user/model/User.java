@@ -1,9 +1,6 @@
 package ru.practicum.main.user.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
@@ -11,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@Data
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
