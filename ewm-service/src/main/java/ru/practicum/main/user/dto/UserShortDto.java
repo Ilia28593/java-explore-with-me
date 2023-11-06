@@ -3,7 +3,8 @@ package ru.practicum.main.user.dto;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
