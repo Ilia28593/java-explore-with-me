@@ -8,14 +8,14 @@ import ru.practicum.main.event.model.Event;
 import ru.practicum.main.event.model.State;
 import ru.practicum.main.event.model.Status;
 import ru.practicum.main.event.repository.EventRepository;
+import ru.practicum.main.exception.DuplicateParticipationException;
 import ru.practicum.main.exception.NotFoundException;
 import ru.practicum.main.exception.OverflowLimitException;
-import ru.practicum.main.exception.DuplicateParticipationException;
-import ru.practicum.main.participation.mapper.ParticipationMapper;
 import ru.practicum.main.participation.dto.ParticipationRequestDto;
+import ru.practicum.main.participation.mapper.ParticipationMapper;
 import ru.practicum.main.participation.model.ParticipationRequest;
 import ru.practicum.main.participation.repository.ParticipationRepository;
-import ru.practicum.main.user.repository.UserRepository;
+import ru.practicum.main.user.service.UserServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,25 +28,22 @@ import java.util.stream.Collectors;
 public class ParticipationServiceImpl implements ParticipationService {
     private final ParticipationRepository participationRepository;
     private final EventRepository eventRepository;
-    private final UserRepository userRepository;
+    private final UserServiceImpl userService;
 
     @Transactional
     @Override
     public List<ParticipationRequestDto> getParticipationRequestPrivate(Long userId) {
-        if (userRepository.getUserById(userId) == null) {
-            throw new NotFoundException("User not found.");
-        }
-        List<Long> eventIds = eventRepository.getEventsByInitiatorId(userId)
-                .stream()
+        userService.getUserById(userId);
+        List<Long> eventIds = eventRepository.getEventsByInitiatorId(userId).stream()
                 .map(Event::getId)
                 .collect(Collectors.toList());
-        List<ParticipationRequest> list;
         if (eventIds.size() == 0) {
-            list = participationRepository.getParticipationRequestsByRequester(userId);
+            return participationRepository.getParticipationRequestsByRequester(userId)
+                    .stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
         } else {
-            list = participationRepository.getParticipationRequestsByRequesterAndEventNotIn(userId, eventIds);
+            return participationRepository.getParticipationRequestsByRequesterAndEventNotIn(userId, eventIds)
+                    .stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
         }
-        return list.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
     }
 
     @Transactional
@@ -54,31 +51,27 @@ public class ParticipationServiceImpl implements ParticipationService {
     public ParticipationRequestDto addParticipationRequestPrivate(Long userId, Long eventId) {
         Event event = eventRepository.getEventsById(eventId);
         List<ParticipationRequest> participationRequestList = participationRepository.getParticipationRequestsByRequesterAndEvent(userId, eventId);
-
         validateAddParticipationRequestPrivate(event, participationRequestList, userId);
-
-        ParticipationRequest participationRequest = ParticipationRequest.builder()
-                .created(LocalDateTime.now())
-                .event(eventId)
-                .requester(userId)
-                .build();
-
-        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
-            participationRequest.setStatus(Status.CONFIRMED);
-            event.setConfirmedRequests(event.getConfirmedRequests() + 1);
-            eventRepository.save(event);
-        } else {
-            participationRequest.setStatus(Status.PENDING);
-            eventRepository.save(event);
-        }
-
-        ParticipationRequest newParticipationRequest = participationRepository.save(participationRequest);
+        ParticipationRequest newParticipationRequest =
+                participationRepository.save(new ParticipationRequest()
+                        .setRequester(userId)
+                        .setCreated(LocalDateTime.now())
+                        .setEvent(eventId)
+                        .setStatus(checkStatus(event) ? Status.CONFIRMED : Status.PENDING));
+        eventRepository.save(event);
         ParticipationRequestDto participationRequestDto = ParticipationMapper
                 .toParticipationRequestDto(newParticipationRequest);
         participationRequestDto.setId(newParticipationRequest.getId());
-
-
         return participationRequestDto;
+    }
+
+    private boolean checkStatus(Event event) {
+        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
+            event.setConfirmedRequests(event.getConfirmedRequests() + 1);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Transactional
