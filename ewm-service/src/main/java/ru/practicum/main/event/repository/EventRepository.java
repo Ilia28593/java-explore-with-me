@@ -9,6 +9,7 @@ import ru.practicum.main.event.model.State;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
@@ -83,7 +84,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 
     Event findFirstByCategoryId(Long catId);
 
-    Event getEventsByIdAndInitiatorId(Long eventId, Long userId);
+    Optional<Event> getEventsByIdAndInitiatorId(Long eventId, Long userId);
 
     Event getEventsById(Long eventId);
 

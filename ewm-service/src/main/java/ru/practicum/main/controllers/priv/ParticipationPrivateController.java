@@ -42,7 +42,7 @@ public class ParticipationPrivateController {
     public ResponseEntity<List<ParticipationRequestDto>> getParticipationRequestPrivate(HttpServletRequest request,
                                                                         @NotNull @Positive @PathVariable Long userId) {
         log.info("Get request received: get participation.");
-        return new ResponseEntity<>(participationService.getParticipationRequestPrivate(userId), HttpStatus.OK);
+        return new ResponseEntity<>(participationService.getParticipationRequest(userId), HttpStatus.OK);
     }
 
     @PatchMapping("/{requestId}/cancel")

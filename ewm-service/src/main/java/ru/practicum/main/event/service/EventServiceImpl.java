@@ -79,29 +79,22 @@ public class EventServiceImpl implements EventService {
     @Transactional
     @Override
     public EventFullDto getEventPrivate(Long userId, Long eventId) {
-        Event event = eventRepository.getEventsByIdAndInitiatorId(eventId, userId);
-        if (event == null) {
+        return EventMapper.toEventFullDto(getEventById(userId, eventId));
+    }
+
+    public Event getEventById(Long userId, Long eventId) {
+        return eventRepository.getEventsByIdAndInitiatorId(eventId, userId).orElseThrow(() -> {
             throw new NotFoundException("Event not found.");
-        }
-        return EventMapper.toEventFullDto(event);
+        });
     }
 
 
     @Transactional
     @Override
     public EventFullDto updateEventPrivate(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest) {
-        Event oldEvent = eventRepository.getEventsByIdAndInitiatorId(eventId, userId);
-
+        Event oldEvent = getEventById(userId, eventId);
         validateUpdateEventPrivate(oldEvent, updateEventUserRequest);
-
-        if (updateEventUserRequest.getLocation() != null) {
-            Location location = locationRepository.save(updateEventUserRequest.getLocation());
-            updateEventUserRequest.setLocation(location);
-        }
-
-        Category newCategory = updateEventUserRequest.getCategory() == null ?
-                oldEvent.getCategory() : categoryRepository.getById(updateEventUserRequest.getCategory());
-
+        Category newCategory = getCategory(updateEventUserRequest, oldEvent);
         Event upEvent = oldEvent;
         if (updateEventUserRequest.getStateAction() != null) {
             if (updateEventUserRequest.getStateAction().equals("SEND_TO_REVIEW")) {
@@ -110,23 +103,25 @@ public class EventServiceImpl implements EventService {
             }
             if (updateEventUserRequest.getStateAction().equals("CANCEL_REVIEW")) {
                 upEvent.setState(State.CANCELED);
-
             }
         }
-
         upEvent.setId(eventId);
-
         return EventMapper.toEventFullDto(eventRepository.save(upEvent));
     }
 
-    private void validateUpdateEventPrivate(Event oldEvent, UpdateEventUserRequest updateEventUserRequest) {
-        if (oldEvent == null) {
-            throw new NotFoundException("The event not found.");
+    private Category getCategory(UpdateEventUserRequest updateEventUserRequest, Event oldEvent) {
+        if (updateEventUserRequest.getLocation() != null) {
+            Location location = locationRepository.save(updateEventUserRequest.getLocation());
+            updateEventUserRequest.setLocation(location);
         }
+        return updateEventUserRequest.getCategory() == null ?
+                oldEvent.getCategory() : categoryRepository.getById(updateEventUserRequest.getCategory());
+    }
+
+    private void validateUpdateEventPrivate(Event oldEvent, UpdateEventUserRequest updateEventUserRequest) {
         if (oldEvent.getState() != null && oldEvent.getState().equals(State.PUBLISHED)) {
             throw new StateArgumentException("Cannot cancel events that are not pending or not canceled");
         }
-
         LocalDateTime start = oldEvent.getEventDate();
         if (updateEventUserRequest.getEventDate() != null) {
             if (LocalDateTime.parse(updateEventUserRequest.getEventDate(), DateTimeFormatter.ofPattern(DATE_FORMAT))
@@ -150,26 +145,22 @@ public class EventServiceImpl implements EventService {
     public EventRequestStatusUpdateResult updateEventRequestStatusPrivate(Long userId,
                                                                           Long eventId,
                                                                           EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
-        Event event = eventRepository.getEventsByIdAndInitiatorId(eventId, userId);
-        if (event == null) {
-            throw new NotFoundException("The event not found.");
-        }
+        Event event = getEventById(userId, eventId);
         if (Long.valueOf(event.getParticipantLimit()).equals(event.getConfirmedRequests())) {
             throw new OverflowLimitException("Cannot exceed the number of participants.");
         }
         Status status = Status.valueOf(eventRequestStatusUpdateRequest.getStatus());
 
         List<ParticipationRequest> list = participationRepository.getParticipationRequestByIdIn(eventRequestStatusUpdateRequest.getRequestIds());
-
         List<ParticipationRequest> listPending = new ArrayList<>();
         List<ParticipationRequest> listRejected = new ArrayList<>();
         List<ParticipationRequest> listOld = new ArrayList<>();
         List<ParticipationRequestDto> listDto = new ArrayList<>();
         List<ParticipationRequestDto> listDtoReject = new ArrayList<>();
 
-        if (event.getParticipantLimit() == 0 && !event.getRequestModeration()) {
+        if (event.getParticipantLimit() == 0 && Boolean.TRUE.equals(!event.getRequestModeration())) {
             return new EventRequestStatusUpdateResult(listDto, listDtoReject);
-        } else if (event.getParticipantLimit() > 0 && !event.getRequestModeration()) {
+        } else if (event.getParticipantLimit() > 0 && Boolean.TRUE.equals(!event.getRequestModeration())) {
             for (ParticipationRequest participationRequest : list) {
                 if (!participationRequest.getStatus().equals(Status.PENDING)) {
                     throw new StatusPerticipationRequestException("Wrong status request");
@@ -179,7 +170,7 @@ public class EventServiceImpl implements EventService {
             }
             listDto = listPending.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
             return new EventRequestStatusUpdateResult(listDto, new ArrayList<>());
-        } else if (event.getParticipantLimit() > 0 && event.getRequestModeration()) {
+        } else if (event.getParticipantLimit() > 0 && Boolean.TRUE.equals(event.getRequestModeration())) {
             for (ParticipationRequest participationRequest : list) {
                 if (!participationRequest.getStatus().equals(Status.PENDING)) {
                     throw new StatusPerticipationRequestException("Wrong status request.");
@@ -193,11 +184,16 @@ public class EventServiceImpl implements EventService {
 
     }
 
-    private EventRequestStatusUpdateResult getEventRequestStatusUpdateResult(Status status, List<ParticipationRequest> listOld, ParticipationRequest participationRequest, List<ParticipationRequest> listPending, Event event, List<ParticipationRequest> list, List<ParticipationRequestDto> listDto, List<ParticipationRequestDto> listDtoReject, List<ParticipationRequest> listRejected) {
+    private EventRequestStatusUpdateResult getEventRequestStatusUpdateResult(Status status, List<ParticipationRequest> listOld,
+                                                                             ParticipationRequest participationRequest,
+                                                                             List<ParticipationRequest> listPending, Event event,
+                                                                             List<ParticipationRequest> list,
+                                                                             List<ParticipationRequestDto> listDto,
+                                                                             List<ParticipationRequestDto> listDtoReject,
+                                                                             List<ParticipationRequest> listRejected) {
 
         if (status.equals(Status.CONFIRMED)) {
             listOld.add(participationRequest);
-
             participationRequest.setStatus(Status.CONFIRMED);
             listPending.add(participationRequest);
             event.setConfirmedRequests(event.getConfirmedRequests() + 1);

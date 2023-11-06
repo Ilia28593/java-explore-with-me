@@ -1,9 +1,10 @@
 package ru.practicum.main.participation.dto;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
 @Data
-@Builder
+@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ParticipationRequestDto {

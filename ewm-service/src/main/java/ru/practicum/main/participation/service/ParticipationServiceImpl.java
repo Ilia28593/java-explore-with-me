@@ -32,12 +32,12 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Transactional
     @Override
-    public List<ParticipationRequestDto> getParticipationRequestPrivate(Long userId) {
+    public List<ParticipationRequestDto> getParticipationRequest(Long userId) {
         userService.getUserById(userId);
         List<Long> eventIds = eventRepository.getEventsByInitiatorId(userId).stream()
                 .map(Event::getId)
                 .collect(Collectors.toList());
-        if (eventIds.size() == 0) {
+        if (eventIds.isEmpty()) {
             return participationRepository.getParticipationRequestsByRequester(userId)
                     .stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
         } else {
