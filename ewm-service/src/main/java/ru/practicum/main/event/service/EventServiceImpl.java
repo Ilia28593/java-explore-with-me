@@ -174,32 +174,8 @@ public class EventServiceImpl implements EventService {
                 if (!participationRequest.getStatus().equals(Status.PENDING)) {
                     throw new StatusPerticipationRequestException("Wrong status request");
                 }
-                if (status.equals(Status.CONFIRMED)) {
-                    listOld.add(participationRequest);
-
-                    participationRequest.setStatus(Status.CONFIRMED);
-                    listPending.add(participationRequest);
-                    event.setConfirmedRequests(event.getConfirmedRequests() + 1);
-                    participationRepository.saveAndFlush(participationRequest);
-
-                    if (Long.valueOf(event.getParticipantLimit()).equals(event.getConfirmedRequests())) {
-                        list.removeAll(listOld);
-                        if (list.size() != 0) {
-                            listDto = listPending.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
-                            listDtoReject = list.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
-                            return new EventRequestStatusUpdateResult(listDto, listDtoReject);
-                        } else {
-                            listDto = listPending.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
-                            return new EventRequestStatusUpdateResult(listDto, new ArrayList<>());
-                        }
-                    }
-                } else {
-                    participationRequest.setStatus(Status.REJECTED);
-                    listRejected.add(participationRequest);
-                    participationRepository.saveAndFlush(participationRequest);
-                    listDtoReject = list.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
-                    return new EventRequestStatusUpdateResult(new ArrayList<>(), listDtoReject);
-                }
+                EventRequestStatusUpdateResult listDto1 = getEventRequestStatusUpdateResult(status, listOld, participationRequest, listPending, event, list, listDto, listDtoReject, listRejected);
+                if (listDto1 != null) return listDto1;
             }
             listDto = listPending.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
             return new EventRequestStatusUpdateResult(listDto, new ArrayList<>());
@@ -208,37 +184,44 @@ public class EventServiceImpl implements EventService {
                 if (!participationRequest.getStatus().equals(Status.PENDING)) {
                     throw new StatusPerticipationRequestException("Wrong status request.");
                 }
-                if (status.equals(Status.CONFIRMED)) {
-                    listOld.add(participationRequest);
-
-                    participationRequest.setStatus(Status.CONFIRMED);
-                    listPending.add(participationRequest);
-                    event.setConfirmedRequests(event.getConfirmedRequests() + 1);
-                    participationRepository.saveAndFlush(participationRequest);
-
-                    if (Long.valueOf(event.getParticipantLimit()).equals(event.getConfirmedRequests())) {
-                        list.removeAll(listOld);
-                        if (list.size() != 0) {
-                            listDto = listPending.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
-                            listDtoReject = list.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
-                            return new EventRequestStatusUpdateResult(listDto, listDtoReject);
-                        } else {
-                            listDto = listPending.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
-                            return new EventRequestStatusUpdateResult(listDto, new ArrayList<>());
-                        }
-                    }
-                } else {
-                    participationRequest.setStatus(Status.REJECTED);
-                    listRejected.add(participationRequest);
-                    participationRepository.saveAndFlush(participationRequest);
-                    listDtoReject = list.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
-                    return new EventRequestStatusUpdateResult(new ArrayList<>(), listDtoReject);
-                }
+                EventRequestStatusUpdateResult listDto1 = getEventRequestStatusUpdateResult(status, listOld, participationRequest, listPending, event, list, listDto, listDtoReject, listRejected);
+                if (listDto1 != null) return listDto1;
             }
         }
         listDto = listPending.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
         return new EventRequestStatusUpdateResult(listDto, new ArrayList<>());
 
+    }
+
+    private EventRequestStatusUpdateResult getEventRequestStatusUpdateResult(Status status, List<ParticipationRequest> listOld, ParticipationRequest participationRequest, List<ParticipationRequest> listPending, Event event, List<ParticipationRequest> list, List<ParticipationRequestDto> listDto, List<ParticipationRequestDto> listDtoReject, List<ParticipationRequest> listRejected) {
+
+        if (status.equals(Status.CONFIRMED)) {
+            listOld.add(participationRequest);
+
+            participationRequest.setStatus(Status.CONFIRMED);
+            listPending.add(participationRequest);
+            event.setConfirmedRequests(event.getConfirmedRequests() + 1);
+            participationRepository.saveAndFlush(participationRequest);
+
+            if (Long.valueOf(event.getParticipantLimit()).equals(event.getConfirmedRequests())) {
+                list.removeAll(listOld);
+                if (list.size() != 0) {
+                    listDto = listPending.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
+                    listDtoReject = list.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
+                    return new EventRequestStatusUpdateResult(listDto, listDtoReject);
+                } else {
+                    listDto = listPending.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
+                    return new EventRequestStatusUpdateResult(listDto, new ArrayList<>());
+                }
+            }
+        } else {
+            participationRequest.setStatus(Status.REJECTED);
+            listRejected.add(participationRequest);
+            participationRepository.saveAndFlush(participationRequest);
+            listDtoReject = list.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
+            return new EventRequestStatusUpdateResult(new ArrayList<>(), listDtoReject);
+        }
+        return null;
     }
 
 
