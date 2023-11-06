@@ -1,6 +1,7 @@
 package ru.practicum.main.location.model;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "locations")
+@Accessors(chain = true)
 public class Location {
 
     @Id
