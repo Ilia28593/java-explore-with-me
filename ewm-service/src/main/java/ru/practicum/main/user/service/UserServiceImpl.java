@@ -15,7 +15,6 @@ import ru.practicum.main.user.mapper.UserMapper;
 import ru.practicum.main.user.model.User;
 import ru.practicum.main.user.repository.UserRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
