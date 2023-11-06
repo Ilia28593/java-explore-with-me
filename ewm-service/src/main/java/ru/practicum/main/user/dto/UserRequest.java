@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewUserRequest {
+public class UserRequest {
 
     @NotBlank
     @Email
