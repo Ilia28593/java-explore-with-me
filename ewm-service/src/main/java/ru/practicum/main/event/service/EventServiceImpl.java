@@ -593,7 +593,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsNoPeriodText(
+                            list = eventRepository.getEventsWithOutPeriodText(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     timeNow,
@@ -601,7 +601,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else {
-                            list = eventRepository.getEventsNoPeriod(
+                            list = eventRepository.getEventsWithOutPeriod(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     timeNow,
@@ -614,7 +614,7 @@ public class EventServiceImpl implements EventService {
                 if (sort != null && sort.equals("EVENT_DATE")) {
                     if (onlyAvailable) {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateAvailableCategoryText(
+                            list = eventRepository.getEventsSortEventDateAvailableText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     paid,
@@ -624,7 +624,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateAvailableCategory(
+                            list = eventRepository.getEventsSortEventDateAvailable(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     paid,
@@ -633,7 +633,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateAvailableText(
+                            list = eventRepository.getEventsSortEventDateAvailableText(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     rangeStart,
@@ -641,7 +641,7 @@ public class EventServiceImpl implements EventService {
                                     text,
                                     pageable);
                         } else {
-                            list = eventRepository.getEventsPeriodSortEventDateAvailable(
+                            list = eventRepository.getEventsSortEventDateAvailable(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     rangeStart,
@@ -650,7 +650,7 @@ public class EventServiceImpl implements EventService {
                         }
                     } else {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateCategoryText(
+                            list = eventRepository.getEventsSortEventDateCategoryText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     paid,
@@ -660,7 +660,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateCategory(
+                            list = eventRepository.getEventsSortEventDateCategory(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     paid,
@@ -669,7 +669,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateText(
+                            list = eventRepository.getEventsSortEventDateText(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     rangeStart,
@@ -677,7 +677,7 @@ public class EventServiceImpl implements EventService {
                                     text,
                                     pageable);
                         } else {
-                            list = eventRepository.getEventsPeriodSortEventDate(
+                            list = eventRepository.getEventsSortEventDate(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     rangeStart,
@@ -688,7 +688,7 @@ public class EventServiceImpl implements EventService {
                 } else if (sort != null && sort.equals("VIEWS")) {
                     if (onlyAvailable) {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodSortViewsAvailableCategoryText(
+                            list = eventRepository.getEventsSortViewsAvailableText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     paid,
@@ -707,7 +707,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodSortViewsAvailableText(
+                            list = eventRepository.getEventsSortViewsAvailableText(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     rangeStart,
@@ -715,7 +715,7 @@ public class EventServiceImpl implements EventService {
                                     text,
                                     pageable);
                         } else {
-                            list = eventRepository.getEventsPeriodSortViewsAvailable(
+                            list = eventRepository.getEventsSortViewsAvailable(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     rangeStart,
@@ -724,7 +724,7 @@ public class EventServiceImpl implements EventService {
                         }
                     } else {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodSortViewsCategoryText(
+                            list = eventRepository.getEventsSortViewsCategoryText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     paid,
@@ -734,7 +734,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsPeriodSortViewsCategory(
+                            list = eventRepository.getEventsSortViewsCategory(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     paid,
@@ -743,7 +743,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodSortViewsText(
+                            list = eventRepository.getEventsSortViewsText(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     rangeStart,
@@ -751,7 +751,7 @@ public class EventServiceImpl implements EventService {
                                     text,
                                     pageable);
                         } else {
-                            list = eventRepository.getEventsPeriodSortViews(
+                            list = eventRepository.getEventsSortViews(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     rangeStart,
@@ -762,7 +762,7 @@ public class EventServiceImpl implements EventService {
                 } else {
                     if (onlyAvailable) {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodAvailableCategoryText(
+                            list = eventRepository.getEventsAvailableCategoryText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     paid,
@@ -772,7 +772,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsPeriodAvailableCategory(
+                            list = eventRepository.getEventsAvailableCategory(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     paid,
@@ -781,7 +781,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodAvailableText(
+                            list = eventRepository.getEventsAvailableText(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     rangeStart,
@@ -789,7 +789,7 @@ public class EventServiceImpl implements EventService {
                                     text,
                                     pageable);
                         } else {
-                            list = eventRepository.getEventsPeriodAvailable(
+                            list = eventRepository.getEventsAvailable(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     rangeStart,
@@ -799,7 +799,7 @@ public class EventServiceImpl implements EventService {
 
                     } else {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodCategoryText(
+                            list = eventRepository.getEventsCategoryText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     paid,
@@ -809,7 +809,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsPeriodCategory(
+                            list = eventRepository.getEventsCategory(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     paid,
@@ -818,7 +818,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodText(
+                            list = eventRepository.getEventsText(
                                     State.PUBLISHED.toString(),
                                     paid,
                                     rangeStart,
@@ -1001,14 +1001,14 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsNoPeriodText(
+                            list = eventRepository.getEventsWithOutPeriodText(
                                     State.PUBLISHED.toString(),
                                     timeNow,
                                     text,
                                     pageable);
 
                         } else {
-                            list = eventRepository.getEventsNoPeriod(
+                            list = eventRepository.getEventsWithOutPeriod(
                                     State.PUBLISHED.toString(),
                                     timeNow,
                                     pageable);
@@ -1023,7 +1023,7 @@ public class EventServiceImpl implements EventService {
                 if (sort != null && sort.equals("EVENT_DATE")) {
                     if (onlyAvailable) {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateAvailableCategoryText(
+                            list = eventRepository.getEventsSortEventDateAvailableText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     rangeStart,
@@ -1032,7 +1032,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateAvailableCategory(
+                            list = eventRepository.getEventsSortEventDateAvailable(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     rangeStart,
@@ -1040,14 +1040,14 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateAvailableText(
+                            list = eventRepository.getEventsSortEventDateAvailableText(
                                     State.PUBLISHED.toString(),
                                     rangeStart,
                                     rangeEnd,
                                     text,
                                     pageable);
                         } else {
-                            list = eventRepository.getEventsPeriodSortEventDateAvailable(
+                            list = eventRepository.getEventsSortEventDateAvailable(
                                     State.PUBLISHED.toString(),
                                     rangeStart,
                                     rangeEnd,
@@ -1055,7 +1055,7 @@ public class EventServiceImpl implements EventService {
                         }
                     } else {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateCategoryText(
+                            list = eventRepository.getEventsSortEventDateCategoryText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     rangeStart,
@@ -1064,7 +1064,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateCategory(
+                            list = eventRepository.getEventsSortEventDateCategory(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     rangeStart,
@@ -1072,14 +1072,14 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodSortEventDateText(
+                            list = eventRepository.getEventsSortEventDateText(
                                     State.PUBLISHED.toString(),
                                     rangeStart,
                                     rangeEnd,
                                     text,
                                     pageable);
                         } else {
-                            list = eventRepository.getEventsPeriodSortEventDate(
+                            list = eventRepository.getEventsSortEventDate(
                                     State.PUBLISHED.toString(),
                                     rangeStart,
                                     rangeEnd,
@@ -1089,7 +1089,7 @@ public class EventServiceImpl implements EventService {
                 } else if (sort != null && sort.equals("VIEWS")) {
                     if (onlyAvailable) {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodSortViewsAvailableCategoryText(
+                            list = eventRepository.getEventsSortViewsAvailableText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     rangeStart,
@@ -1106,14 +1106,14 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodSortViewsAvailableText(
+                            list = eventRepository.getEventsSortViewsAvailableText(
                                     State.PUBLISHED.toString(),
                                     rangeStart,
                                     rangeEnd,
                                     text,
                                     pageable);
                         } else {
-                            list = eventRepository.getEventsPeriodSortViewsAvailable(
+                            list = eventRepository.getEventsSortViewsAvailable(
                                     State.PUBLISHED.toString(),
                                     rangeStart,
                                     rangeEnd,
@@ -1121,7 +1121,7 @@ public class EventServiceImpl implements EventService {
                         }
                     } else {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodSortViewsCategoryText(
+                            list = eventRepository.getEventsSortViewsCategoryText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     rangeStart,
@@ -1130,7 +1130,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsPeriodSortViewsCategory(
+                            list = eventRepository.getEventsSortViewsCategory(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     rangeStart,
@@ -1138,14 +1138,14 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodSortViewsText(
+                            list = eventRepository.getEventsSortViewsText(
                                     State.PUBLISHED.toString(),
                                     rangeStart,
                                     rangeEnd,
                                     text,
                                     pageable);
                         } else {
-                            list = eventRepository.getEventsPeriodSortViews(
+                            list = eventRepository.getEventsSortViews(
                                     State.PUBLISHED.toString(),
                                     rangeStart,
                                     rangeEnd,
@@ -1155,7 +1155,7 @@ public class EventServiceImpl implements EventService {
                 } else {
                     if (onlyAvailable) {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodAvailableCategoryText(
+                            list = eventRepository.getEventsAvailableCategoryText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     rangeStart,
@@ -1164,7 +1164,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsPeriodAvailableCategory(
+                            list = eventRepository.getEventsAvailableCategory(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     rangeStart,
@@ -1172,14 +1172,14 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodAvailableText(
+                            list = eventRepository.getEventsAvailableText(
                                     State.PUBLISHED.toString(),
                                     rangeStart,
                                     rangeEnd,
                                     text,
                                     pageable);
                         } else {
-                            list = eventRepository.getEventsPeriodAvailable(
+                            list = eventRepository.getEventsAvailable(
                                     State.PUBLISHED.toString(),
                                     rangeStart,
                                     rangeEnd,
@@ -1188,7 +1188,7 @@ public class EventServiceImpl implements EventService {
 
                     } else {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsPeriodCategoryText(
+                            list = eventRepository.getEventsCategoryText(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     rangeStart,
@@ -1197,7 +1197,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsPeriodCategory(
+                            list = eventRepository.getEventsCategory(
                                     State.PUBLISHED.toString(),
                                     categories,
                                     rangeStart,
@@ -1205,7 +1205,7 @@ public class EventServiceImpl implements EventService {
                                     pageable);
 
                         } else if (text != null) {
-                            list = eventRepository.getEventsPeriodText(
+                            list = eventRepository.getEventsText(
                                     State.PUBLISHED.toString(),
                                     rangeStart,
                                     rangeEnd,
