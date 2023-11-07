@@ -796,16 +796,11 @@ public class EventServiceImpl implements EventService {
             throw new IllegalArgumentException(e.getLocalizedMessage());
         }
 
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return new ArrayList<>();
         }
 
-        return list.stream().
-
-                map(EventMapper::toEventShortDto)
-                        .
-
-                collect(Collectors.toList());
+        return list.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
     }
 
     @Transactional
