@@ -1003,24 +1003,34 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     List<Event> getEventsByInitiatorIdInAndStateIn(List<Long> users, List<State> states, Pageable pageable);
 
     List<Event> getEventsByInitiatorIdInAndCategoryIdIn(List<Long> users, List<Long> categories, Pageable pageable);
+
     List<Event> getEventsByInitiatorIdInAndStateInAndCategoryIdIn(List<Long> users, List<State> states, List<Long> categories, Pageable pageable);
+
     List<Event> getEventsByEventDateAfterAndEventDateBefore(LocalDateTime start, LocalDateTime end, Pageable pageable);
+
     Event getEventByIdAndState(Long eventId, State state);
+
     List<Event> getEventsByCategoryIdInAndEventDateAfterAndEventDateBefore(List<Long> categories, LocalDateTime start,
                                                                            LocalDateTime end, Pageable pageable);
+
     List<Event> getEventsByStateInAndEventDateAfterAndEventDateBefore(List<State> states, LocalDateTime start,
                                                                       LocalDateTime end, Pageable pageable);
+
     List<Event> getEventsByInitiatorIdInAndEventDateAfterAndEventDateBefore(List<Long> users, LocalDateTime start,
                                                                             LocalDateTime end, Pageable pageable);
+
     List<Event> getEventsByStateInAndCategoryIdInAndEventDateAfterAndEventDateBefore(List<State> states, List<Long> categories,
                                                                                      LocalDateTime start, LocalDateTime end,
                                                                                      Pageable pageable);
+
     List<Event> getEventsByInitiatorIdInAndStateInAndEventDateAfterAndEventDateBefore(List<Long> users, List<State> states,
                                                                                       LocalDateTime start, LocalDateTime end,
                                                                                       Pageable pageable);
+
     List<Event> getEventsByInitiatorIdInAndCategoryIdInAndEventDateAfterAndEventDateBefore(List<Long> users, List<Long> categories,
                                                                                            LocalDateTime start, LocalDateTime end,
                                                                                            Pageable pageable);
+
     List<Event> getEventsByInitiatorIdInAndStateInAndCategoryIdInAndEventDateAfterAndEventDateBefore(List<Long> users,
                                                                                                      List<State> stateEnum,
                                                                                                      List<Long> categories,
