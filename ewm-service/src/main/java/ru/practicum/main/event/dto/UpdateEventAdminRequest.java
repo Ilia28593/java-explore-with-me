@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@Builder
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor

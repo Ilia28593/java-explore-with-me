@@ -1,15 +1,15 @@
 package ru.practicum.main.event.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.Accessors;
 import ru.practicum.main.location.model.Location;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
-@Data
+@Getter
+@Setter
+@Accessors(chain = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
