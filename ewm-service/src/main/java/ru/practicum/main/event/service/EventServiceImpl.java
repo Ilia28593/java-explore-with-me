@@ -406,7 +406,7 @@ public class EventServiceImpl implements EventService {
         if (text != null) {
             text = "%" + text + "%";
         }
-        if (paid != null && sort != null) {
+        if (paid != null) {
             if (categories != null && text != null) {
                 list = eventRepository.getEvents(
                         State.PUBLISHED.toString(), categories, paid, timeNow, text, pageable);
