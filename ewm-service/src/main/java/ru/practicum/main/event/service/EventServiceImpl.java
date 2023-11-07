@@ -408,7 +408,7 @@ public class EventServiceImpl implements EventService {
         }
         if (paid != null) {
             if (rangeStart == null && rangeEnd == null) {
-                if (sort != null && sort.equals("EVENT_DATE")) {
+                if (sort != null && (sort.equals("EVENT_DATE") || sort.equals("VIEWS"))) {
                     if (categories != null && text != null) {
                         list = eventRepository.getEvents(
                                 State.PUBLISHED.toString(), categories, paid, timeNow, text, pageable);
@@ -422,20 +422,6 @@ public class EventServiceImpl implements EventService {
                                 State.PUBLISHED.toString(), paid, timeNow, text, pageable);
                     } else {
                         list = eventRepository.getEvents(
-                                State.PUBLISHED.toString(), paid, timeNow, pageable);
-                    }
-                } else if (sort != null && sort.equals("VIEWS")) {
-                    if (categories != null && text != null) {
-                        list = eventRepository.getEventsNoPeriodSortViewsAvailableCategoryText(
-                                State.PUBLISHED.toString(), categories, paid, timeNow, text, pageable);
-                    } else if (text == null && categories != null) {
-                        list = eventRepository.getEventsNoPeriodSortViewsAvailableCategory(
-                                State.PUBLISHED.toString(), categories, paid, timeNow, pageable);
-                    } else if (text != null) {
-                        list = eventRepository.getEventsNoPeriodSortViewsAvailableText(
-                                State.PUBLISHED.toString(), paid, timeNow, text, pageable);
-                    } else {
-                        list = eventRepository.getEventsNoPeriodSortViewsAvailable(
                                 State.PUBLISHED.toString(), paid, timeNow, pageable);
                     }
 
