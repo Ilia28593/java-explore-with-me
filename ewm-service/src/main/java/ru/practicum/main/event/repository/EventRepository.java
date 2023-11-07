@@ -212,20 +212,20 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "and e.paid=?2 " +
             "and e.event_date > ?3 " +
             "and upper(e.annotation) like upper(?4) or upper(e.description) like upper(?4) ", nativeQuery = true)
-    List<Event> getEventsNoPeriodText(String state,
-                                      boolean paid,
-                                      LocalDateTime time,
-                                      String text,
-                                      Pageable pageable);
+    List<Event> getEvents(String state,
+                          boolean paid,
+                          LocalDateTime time,
+                          String text,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
             "and e.paid=?2 " +
             "and e.event_date > ?3 ", nativeQuery = true)
-    List<Event> getEventsNoPeriod(String state,
-                                  boolean paid,
-                                  LocalDateTime time,
-                                  Pageable pageable);
+    List<Event> getEvents(String state,
+                          boolean paid,
+                          LocalDateTime time,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
@@ -235,13 +235,13 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "and e.event_date >= ?4 and e.event_date <= ?5 " +
             "and upper(e.annotation) like upper(?6) or upper(e.description) like upper(?6) " +
             "order by e.event_date desc ", nativeQuery = true)
-    List<Event> getEventsPeriodSortEventDateAvailableCategoryText(String state,
-                                                                  List<Long> category,
-                                                                  boolean paid,
-                                                                  LocalDateTime timeStart,
-                                                                  LocalDateTime timeEnd,
-                                                                  String text,
-                                                                  Pageable pageable);
+    List<Event> getEvents(String state,
+                          List<Long> category,
+                          boolean paid,
+                          LocalDateTime timeStart,
+                          LocalDateTime timeEnd,
+                          String text,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
@@ -250,12 +250,12 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "and e.participant_limit = 0 or e.participant_limit > e.confirmed_requests " +
             "and e.event_date >= ?4 and e.event_date <= ?5 " +
             "order by e.event_date desc ", nativeQuery = true)
-    List<Event> getEventsPeriodSortEventDateAvailableCategory(String state,
-                                                              List<Long> category,
-                                                              boolean paid,
-                                                              LocalDateTime timeStart,
-                                                              LocalDateTime timeEnd,
-                                                              Pageable pageable);
+    List<Event> getEvents(String state,
+                          List<Long> category,
+                          boolean paid,
+                          LocalDateTime timeStart,
+                          LocalDateTime timeEnd,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
@@ -264,12 +264,12 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "and e.event_date >= ?3 and e.event_date <= ?4 " +
             "and upper(e.annotation) like upper(?5) or upper(e.description) like upper(?5) " +
             "order by e.event_date desc ", nativeQuery = true)
-    List<Event> getEventsPeriodSortEventDateAvailableText(String state,
-                                                          boolean paid,
-                                                          LocalDateTime timeStart,
-                                                          LocalDateTime timeEnd,
-                                                          String text,
-                                                          Pageable pageable);
+    List<Event> getEvents(String state,
+                          boolean paid,
+                          LocalDateTime timeStart,
+                          LocalDateTime timeEnd,
+                          String text,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
@@ -277,11 +277,11 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "and e.participant_limit = 0 or e.participant_limit > e.confirmed_requests " +
             "and e.event_date >=  ?3 and e.event_date <= ?4 " +
             "order by e.event_date desc ", nativeQuery = true)
-    List<Event> getEventsPeriodSortEventDateAvailable(String state,
-                                                      boolean paid,
-                                                      LocalDateTime timeStart,
-                                                      LocalDateTime timeEnd,
-                                                      Pageable pageable);
+    List<Event> getEvents(String state,
+                          boolean paid,
+                          LocalDateTime timeStart,
+                          LocalDateTime timeEnd,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
@@ -775,17 +775,17 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "where e.state=?1 " +
             "and e.event_date > ?2 " +
             "and upper(e.annotation) like upper(?3) or upper(e.description) like upper(?3) ", nativeQuery = true)
-    List<Event> getEventsNoPeriodText(String state,
-                                      LocalDateTime time,
-                                      String text,
-                                      Pageable pageable);
+    List<Event> getEvents(String state,
+                          LocalDateTime time,
+                          String text,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
             "and e.event_date > ?2 ", nativeQuery = true)
-    List<Event> getEventsNoPeriod(String state,
-                                  LocalDateTime time,
-                                  Pageable pageable);
+    List<Event> getEvents(String state,
+                          LocalDateTime time,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
@@ -794,12 +794,12 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "and e.event_date >= ?3 and e.event_date <= ?4 " +
             "and upper(e.annotation) like upper(?5) or upper(e.description) like upper(?5) " +
             "order by e.event_date desc ", nativeQuery = true)
-    List<Event> getEventsPeriodSortEventDateAvailableCategoryText(String state,
-                                                                  List<Long> category,
-                                                                  LocalDateTime timeStart,
-                                                                  LocalDateTime timeEnd,
-                                                                  String text,
-                                                                  Pageable pageable);
+    List<Event> getEvents(String state,
+                          List<Long> category,
+                          LocalDateTime timeStart,
+                          LocalDateTime timeEnd,
+                          String text,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
@@ -807,11 +807,11 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "and e.participant_limit = 0 or e.participant_limit > e.confirmed_requests " +
             "and e.event_date >= ?3 and e.event_date <= ?4 " +
             "order by e.event_date desc ", nativeQuery = true)
-    List<Event> getEventsPeriodSortEventDateAvailableCategory(String state,
-                                                              List<Long> category,
-                                                              LocalDateTime timeStart,
-                                                              LocalDateTime timeEnd,
-                                                              Pageable pageable);
+    List<Event> getEvents(String state,
+                          List<Long> category,
+                          LocalDateTime timeStart,
+                          LocalDateTime timeEnd,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
@@ -819,21 +819,21 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "and e.event_date >= ?2 and e.event_date <= ?3 " +
             "and upper(e.annotation) like upper(?4) or upper(e.description) like upper(?4) " +
             "order by e.event_date desc ", nativeQuery = true)
-    List<Event> getEventsPeriodSortEventDateAvailableText(String state,
-                                                          LocalDateTime timeStart,
-                                                          LocalDateTime timeEnd,
-                                                          String text,
-                                                          Pageable pageable);
+    List<Event> getEvents(String state,
+                          LocalDateTime timeStart,
+                          LocalDateTime timeEnd,
+                          String text,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
             "and e.participant_limit = 0 or e.participant_limit > e.confirmed_requests " +
             "and e.event_date >=  ?2 and e.event_date <= ?3 " +
             "order by e.event_date desc ", nativeQuery = true)
-    List<Event> getEventsPeriodSortEventDateAvailable(String state,
-                                                      LocalDateTime timeStart,
-                                                      LocalDateTime timeEnd,
-                                                      Pageable pageable);
+    List<Event> getEvents(String state,
+                          LocalDateTime timeStart,
+                          LocalDateTime timeEnd,
+                          Pageable pageable);
 
     @Query(value = "select * from events as e " +
             "where e.state=?1 " +
@@ -1067,24 +1067,34 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     List<Event> getEventsByInitiatorIdInAndStateIn(List<Long> users, List<State> states, Pageable pageable);
 
     List<Event> getEventsByInitiatorIdInAndCategoryIdIn(List<Long> users, List<Long> categories, Pageable pageable);
+
     List<Event> getEventsByInitiatorIdInAndStateInAndCategoryIdIn(List<Long> users, List<State> states, List<Long> categories, Pageable pageable);
+
     List<Event> getEventsByEventDateAfterAndEventDateBefore(LocalDateTime start, LocalDateTime end, Pageable pageable);
+
     Event getEventByIdAndState(Long eventId, State state);
+
     List<Event> getEventsByCategoryIdInAndEventDateAfterAndEventDateBefore(List<Long> categories, LocalDateTime start,
                                                                            LocalDateTime end, Pageable pageable);
+
     List<Event> getEventsByStateInAndEventDateAfterAndEventDateBefore(List<State> states, LocalDateTime start,
                                                                       LocalDateTime end, Pageable pageable);
+
     List<Event> getEventsByInitiatorIdInAndEventDateAfterAndEventDateBefore(List<Long> users, LocalDateTime start,
                                                                             LocalDateTime end, Pageable pageable);
+
     List<Event> getEventsByStateInAndCategoryIdInAndEventDateAfterAndEventDateBefore(List<State> states, List<Long> categories,
                                                                                      LocalDateTime start, LocalDateTime end,
                                                                                      Pageable pageable);
+
     List<Event> getEventsByInitiatorIdInAndStateInAndEventDateAfterAndEventDateBefore(List<Long> users, List<State> states,
                                                                                       LocalDateTime start, LocalDateTime end,
                                                                                       Pageable pageable);
+
     List<Event> getEventsByInitiatorIdInAndCategoryIdInAndEventDateAfterAndEventDateBefore(List<Long> users, List<Long> categories,
                                                                                            LocalDateTime start, LocalDateTime end,
                                                                                            Pageable pageable);
+
     List<Event> getEventsByInitiatorIdInAndStateInAndCategoryIdInAndEventDateAfterAndEventDateBefore(List<Long> users,
                                                                                                      List<State> stateEnum,
                                                                                                      List<Long> categories,
