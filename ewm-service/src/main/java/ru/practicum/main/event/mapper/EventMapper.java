@@ -103,5 +103,4 @@ public class EventMapper {
                 .setTitle(updateEventUserRequest.getTitle() == null ? oldEvent.getTitle() : updateEventUserRequest.getTitle())
                 .setViews(oldEvent.getViews());
     }
-
 }
