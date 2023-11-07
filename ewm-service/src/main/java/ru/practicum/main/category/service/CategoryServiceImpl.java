@@ -7,9 +7,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.main.category.mapper.CategoryMapper;
 import ru.practicum.main.category.dto.CategoryDto;
 import ru.practicum.main.category.dto.NewCategoryDto;
+import ru.practicum.main.category.mapper.CategoryMapper;
 import ru.practicum.main.category.model.Category;
 import ru.practicum.main.category.repository.CategoryRepository;
 import ru.practicum.main.event.repository.EventRepository;
@@ -42,9 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDto updateCategoryAdmin(Long catId, NewCategoryDto newCategoryDto) {
-        if (categoryRepository.findCategoryById(catId) == null) {
-            throw new NotFoundException("Category not found.");
-        }
+        getCategory(catId);
         Category newCategory = CategoryMapper.toCategory(newCategoryDto);
         newCategory.setId(catId);
         CategoryDto categoryDto;
@@ -59,11 +57,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public void deleteCategoryAdmin(Long catId) {
-        if (categoryRepository.getById(catId) == null) {
-            throw new NotFoundException("Category not found.");
-        }
+        getCategory(catId);
         if (eventRepository.findFirstByCategoryId(catId) != null) {
-            throw new ValidationCategoryException("The category has not been deleted.");
+            throw new ValidationCategoryException("Category has not been deleted.");
         }
         categoryRepository.deleteCategoryById(catId);
     }
@@ -74,7 +70,6 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryDto> getCategoryPublic(Integer from, Integer size) {
 
         Pageable pageable = PageRequest.of(from / size, size);
-
         return categoryRepository.findAll(pageable)
                 .stream()
                 .map(CategoryMapper::toCategoryDto)
@@ -86,8 +81,16 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto getCategoryByIdPublic(Long catId) {
         Category category = categoryRepository.findCategoryById(catId);
         if (category == null) {
-            throw new NotFoundException("The required object was not found.");
+            throw new NotFoundException("Required object was not found.");
         }
         return CategoryMapper.toCategoryDto(category);
+    }
+
+    private Category getCategory(Long categoryId) {
+        Category category = categoryRepository.getById(categoryId);
+        if (category == null) {
+            throw new NotFoundException("Category not found.");
+        }
+        return category;
     }
 }
