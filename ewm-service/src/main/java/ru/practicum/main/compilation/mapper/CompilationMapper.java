@@ -22,17 +22,15 @@ public class CompilationMapper {
     }
 
     public static Compilation toCompilation(NewCompilationDto newCompilationDto, Set<Event> events) {
-        return Compilation.builder()
-                .events(events)
-                .pinned(newCompilationDto.isPinned())
-                .title(newCompilationDto.getTitle())
-                .build();
+        return new Compilation()
+                .setEvents(events)
+                .setPinned(newCompilationDto.isPinned())
+                .setTitle(newCompilationDto.getTitle());
     }
 
     public static Compilation toCompilation(UpdateCompilationRequest updateCompilationRequest, Set<Event> events) {
-        return Compilation.builder()
-                .events(events)
-                .pinned(updateCompilationRequest.isPinned())
-                .build();
+        return new Compilation()
+                .setEvents(events)
+                .setPinned(updateCompilationRequest.isPinned());
     }
 }
