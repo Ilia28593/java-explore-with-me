@@ -390,10 +390,9 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
     @Override
-    public List<EventShortDto> getEventsAndStatsPublic(HttpServletRequest request, String
-            text, List<Long> categories, Boolean paid,
-                                                       LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable,
-                                                       String sort, Integer from, Integer size) {
+    public List<EventShortDto> getEventsAndStatsPublic(HttpServletRequest request, String text, List<Long> categories,
+                                                       Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd,
+                                                       Boolean onlyAvailable, String sort, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
         LocalDateTime timeNow = LocalDateTime.now();
 
