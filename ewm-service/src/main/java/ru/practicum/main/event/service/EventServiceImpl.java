@@ -409,70 +409,36 @@ public class EventServiceImpl implements EventService {
         if (paid != null) {
             if (rangeStart == null && rangeEnd == null) {
                 if (sort != null && sort.equals("EVENT_DATE")) {
-                    if (onlyAvailable) {
-                        if (categories != null && text != null) {
-                            list = eventRepository.getEventsNoPeriodSortEventDateAvailableCategoryText(
-                                    State.PUBLISHED.toString(), categories, paid, timeNow, text, pageable);
+                    if (categories != null && text != null) {
+                        list = eventRepository.getEvents(
+                                State.PUBLISHED.toString(), categories, paid, timeNow, text, pageable);
 
-                        } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsNoPeriodSortEventDateAvailableCategory(
-                                    State.PUBLISHED.toString(), categories, paid, timeNow, pageable);
+                    } else if (text == null && categories != null) {
+                        list = eventRepository.getEvents(
+                                State.PUBLISHED.toString(), categories, paid, timeNow, pageable);
 
-                        } else if (text != null) {
-                            list = eventRepository.getEventsNoPeriodSortEventDateAvailableText(
-                                    State.PUBLISHED.toString(), paid, timeNow, text, pageable);
-                        } else {
-                            list = eventRepository.getEventsNoPeriodSortEventDateAvailable(
-                                    State.PUBLISHED.toString(), paid, timeNow, pageable);
-                        }
+                    } else if (text != null) {
+                        list = eventRepository.getEvents(
+                                State.PUBLISHED.toString(), paid, timeNow, text, pageable);
                     } else {
-                        if (categories != null && text != null) {
-                            list = eventRepository.getEventsNoPeriodSortEventDateCategoryText(
-                                    State.PUBLISHED.toString(), categories, paid, timeNow, text, pageable);
-
-                        } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsNoPeriodSortEventDateCategory(
-                                    State.PUBLISHED.toString(), categories, paid, timeNow, pageable);
-                        } else if (text != null) {
-                            list = eventRepository.getEventsNoPeriodSortEventDateText(State.PUBLISHED.toString(), paid,
-                                    timeNow, text, pageable);
-                        } else {
-                            list = eventRepository.getEventsNoPeriodSortEventDate(
-                                    State.PUBLISHED.toString(), paid, timeNow, pageable);
-                        }
+                        list = eventRepository.getEvents(
+                                State.PUBLISHED.toString(), paid, timeNow, pageable);
                     }
                 } else if (sort != null && sort.equals("VIEWS")) {
-                    if (onlyAvailable) {
-                        if (categories != null && text != null) {
-                            list = eventRepository.getEventsNoPeriodSortViewsAvailableCategoryText(
-                                    State.PUBLISHED.toString(), categories, paid, timeNow, text, pageable);
-                        } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsNoPeriodSortViewsAvailableCategory(
-                                    State.PUBLISHED.toString(), categories, paid, timeNow, pageable);
-                        } else if (text != null) {
-                            list = eventRepository.getEventsNoPeriodSortViewsAvailableText(
-                                    State.PUBLISHED.toString(), paid, timeNow, text, pageable);
-                        } else {
-                            list = eventRepository.getEventsNoPeriodSortViewsAvailable(
-                                    State.PUBLISHED.toString(), paid, timeNow, pageable);
-                        }
+                    if (categories != null && text != null) {
+                        list = eventRepository.getEventsNoPeriodSortViewsAvailableCategoryText(
+                                State.PUBLISHED.toString(), categories, paid, timeNow, text, pageable);
+                    } else if (text == null && categories != null) {
+                        list = eventRepository.getEventsNoPeriodSortViewsAvailableCategory(
+                                State.PUBLISHED.toString(), categories, paid, timeNow, pageable);
+                    } else if (text != null) {
+                        list = eventRepository.getEventsNoPeriodSortViewsAvailableText(
+                                State.PUBLISHED.toString(), paid, timeNow, text, pageable);
                     } else {
-                        if (categories != null && text != null) {
-                            list = eventRepository.getEventsNoPeriodSortViewsCategoryText(
-                                    State.PUBLISHED.toString(), categories, paid, timeNow, text, pageable);
-                        } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsNoPeriodSortViewsCategory(
-                                    State.PUBLISHED.toString(), categories, paid, timeNow, pageable);
-
-                        } else if (text != null) {
-                            list = eventRepository.getEventsNoPeriodSortViewsText(
-                                    State.PUBLISHED.toString(), paid, timeNow, text, pageable);
-                        } else {
-                            list = eventRepository.getEventsNoPeriodSortViews(
-                                    State.PUBLISHED.toString(), paid, timeNow, pageable);
-                        }
-
+                        list = eventRepository.getEventsNoPeriodSortViewsAvailable(
+                                State.PUBLISHED.toString(), paid, timeNow, pageable);
                     }
+
                 } else {
                     if (onlyAvailable) {
                         if (categories != null && text != null) {
@@ -608,17 +574,17 @@ public class EventServiceImpl implements EventService {
                 if (sort != null && sort.equals("EVENT_DATE")) {
                     if (onlyAvailable) {
                         if (categories != null && text != null) {
-                            list = eventRepository.getEventsNoPeriodSortEventDateAvailableCategoryText(State.PUBLISHED.toString(),
+                            list = eventRepository.getEvents(State.PUBLISHED.toString(),
                                     categories, timeNow, text, pageable);
 
                         } else if (text == null && categories != null) {
-                            list = eventRepository.getEventsNoPeriodSortEventDateAvailableCategory(State.PUBLISHED.toString(),
+                            list = eventRepository.getEvents(State.PUBLISHED.toString(),
                                     categories, timeNow, pageable);
                         } else if (text != null) {
-                            list = eventRepository.getEventsNoPeriodSortEventDateAvailableText(State.PUBLISHED.toString(),
+                            list = eventRepository.getEvents(State.PUBLISHED.toString(),
                                     timeNow, text, pageable);
                         } else {
-                            list = eventRepository.getEventsNoPeriodSortEventDateAvailable(State.PUBLISHED.toString(),
+                            list = eventRepository.getEvents(State.PUBLISHED.toString(),
                                     timeNow, pageable);
                         }
                     } else {
@@ -825,7 +791,8 @@ public class EventServiceImpl implements EventService {
 
         try {
             statsClient.addRequest(request.getRemoteAddr(), endpointHitDto);
-        } catch (RuntimeException e) {
+        } catch (
+                RuntimeException e) {
             throw new IllegalArgumentException(e.getLocalizedMessage());
         }
 
@@ -833,8 +800,12 @@ public class EventServiceImpl implements EventService {
             return new ArrayList<>();
         }
 
-        return list.stream().map(EventMapper::toEventShortDto)
-                .collect(Collectors.toList());
+        return list.stream().
+
+                map(EventMapper::toEventShortDto)
+                        .
+
+                collect(Collectors.toList());
     }
 
     @Transactional
