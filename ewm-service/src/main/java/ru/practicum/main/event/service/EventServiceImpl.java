@@ -456,11 +456,8 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        EndpointHitDto endpointHitDto = new EndpointHitDto(null,
-                "main-service",
-                request.getRequestURI(),
-                request.getRemoteAddr(),
-                timeNow.format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
+        EndpointHitDto endpointHitDto = new EndpointHitDto(null, "main-service", request.getRequestURI(),
+                request.getRemoteAddr(), timeNow.format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
 
         try {
             statsClient.addRequest(request.getRemoteAddr(), endpointHitDto);
