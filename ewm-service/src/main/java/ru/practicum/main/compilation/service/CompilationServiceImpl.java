@@ -49,7 +49,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     @Override
     public CompilationDto getCompilationByIdPublic(Long compId) {
-        return CompilationMapper.toCompilationDto( getCompilation(compId));
+        return CompilationMapper.toCompilationDto(getCompilation(compId));
     }
 
 
