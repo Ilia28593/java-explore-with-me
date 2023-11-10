@@ -16,11 +16,9 @@ import ru.practicum.main.participation.mapper.ParticipationMapper;
 import ru.practicum.main.participation.model.ParticipationRequest;
 import ru.practicum.main.participation.repository.ParticipationRepository;
 import ru.practicum.main.user.repository.UserRepository;
-import ru.practicum.main.user.service.UserServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
