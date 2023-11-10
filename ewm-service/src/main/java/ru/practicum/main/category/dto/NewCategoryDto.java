@@ -1,6 +1,7 @@
 package ru.practicum.main.category.dto;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
