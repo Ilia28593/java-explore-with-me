@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
-    Event getEventIfExist(Long eventId);
+    Event getEventFindBuId(Long eventId);
 
     List<EventShortDto> getEventsPrivate(Long userId, Integer from, Integer size);
 

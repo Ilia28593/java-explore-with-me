@@ -1,7 +1,7 @@
 package ru.practicum.main.user.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,29 +16,14 @@ import ru.practicum.main.user.model.User;
 import ru.practicum.main.user.repository.UserRepository;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Override
-    public User getUserIfExist(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user == null) {
-            throw new NotFoundException("User is not exist.");
-        } else {
-            return user.get();
-        }
-    }
 
     @Transactional
     @Override
@@ -60,9 +45,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDto addUserAdmin(NewUserRequest userRequest) {
-        User user = UserMapper.toUser(userRequest);
         try {
-            return UserMapper.toUserDto(userRepository.saveAndFlush(user));
+            return UserMapper.toUserDto(userRepository.saveAndFlush(UserMapper.toUser(userRequest)));
         } catch (DataIntegrityViolationException e) {
             log.info("Duplicate email address");
             throw new DuplicateEmailException(userRequest.getEmail());
@@ -76,6 +60,7 @@ public class UserServiceImpl implements UserService {
         userRepository.removeUserById(userId);
     }
 
+    @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException("User not found by id.");

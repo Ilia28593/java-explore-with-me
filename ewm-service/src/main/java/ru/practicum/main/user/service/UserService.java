@@ -8,7 +8,7 @@ import java.util.Collection;
 
 public interface UserService {
 
-    User getUserIfExist(Long userId);
+    User getUserById(Long userId);
 
     UserDto addUserAdmin(NewUserRequest newUserRequest);
 

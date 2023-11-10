@@ -51,13 +51,8 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public Event getEventIfExist(Long eventId) {
-        Optional<Event> event = eventRepository.findById(eventId);
-        if (event == null) {
-            throw new NotFoundException("Event is not exist.");
-        } else {
-            return event.get();
-        }
+    public Event getEventFindBuId(Long eventId) {
+        return getEvent(eventRepository.findById(eventId));
     }
 
     @Transactional
@@ -83,7 +78,7 @@ public class EventServiceImpl implements EventService {
         Location location = locationRepository.save(newEventDto.getLocation());
         newEventDto.setLocation(location);
         Category category = categoryRepository.getById(newEventDto.getCategory());
-        User user = userService.getUserIfExist(userId);
+        User user = userService.getUserById(userId);
 
         Event event = EventMapper.toEvent(newEventDto, user, category);
         return EventMapper.toEventFullDto(eventRepository.save(event));
@@ -92,12 +87,13 @@ public class EventServiceImpl implements EventService {
     @Transactional
     @Override
     public EventFullDto getEventPrivate(Long userId, Long eventId) {
+        return EventMapper.toEventFullDto(getEvent(eventRepository.getEventsByIdAndInitiatorId(eventId, userId)));
+    }
 
-        Optional<Event> event = eventRepository.getEventsByIdAndInitiatorId(eventId, userId);
-        if (event == null) {
+    private Event getEvent(Optional<Event> eventRepository) {
+        return eventRepository.orElseThrow(() -> {
             throw new NotFoundException("The event not found.");
-        }
-        return EventMapper.toEventFullDto(event.get());
+        });
     }
 
 

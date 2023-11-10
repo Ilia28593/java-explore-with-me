@@ -33,16 +33,16 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentDto addCommentForUser(CommentDto commentDto) {
-        User user = userService.getUserIfExist(commentDto.getAuthor());
-        Event event = eventService.getEventIfExist(commentDto.getEvent());
+        User user = userService.getUserById(commentDto.getAuthor());
+        Event event = eventService.getEventFindBuId(commentDto.getEvent());
         return CommentMapper.toCommentDto(commentRepository.save(CommentMapper.toComment(commentDto, user, event)));
     }
 
     @Transactional
     @Override
     public CommentDto updateCommentForUser(Long commentId, CommentDto commentDto) {
-        User user = userService.getUserIfExist(commentDto.getAuthor());
-        Event event = eventService.getEventIfExist(commentDto.getEvent());
+        User user = userService.getUserById(commentDto.getAuthor());
+        Event event = eventService.getEventFindBuId(commentDto.getEvent());
 
         if (!commentRepository.getCommentById(commentId).getAuthor().getId().equals(commentDto.getAuthor())) {
             throw new NotFoundException("The user has no comment.");
@@ -117,7 +117,7 @@ public class CommentServiceImpl implements CommentService {
         } else {
             return commentsDto.stream()
                     .map((CommentDto commentDto) -> CommentMapper.toCommentWithFullAuthorDto(commentDto,
-                            userService.getUserIfExist(commentDto.getAuthor())))
+                            userService.getUserById(commentDto.getAuthor())))
                     .collect(Collectors.toList());
         }
     }
@@ -126,7 +126,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentWithFullAuthorDto getCommentByIdForAdmin(Long commentId) {
         CommentDto commentDto = CommentMapper.toCommentDto(getCommentIfExist(commentId));
-        return CommentMapper.toCommentWithFullAuthorDto(commentDto, userService.getUserIfExist(commentDto.getAuthor()));
+        return CommentMapper.toCommentWithFullAuthorDto(commentDto, userService.getUserById(commentDto.getAuthor()));
     }
 
     @Transactional

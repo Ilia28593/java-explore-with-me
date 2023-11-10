@@ -15,7 +15,7 @@ import ru.practicum.main.participation.dto.ParticipationRequestDto;
 import ru.practicum.main.participation.mapper.ParticipationMapper;
 import ru.practicum.main.participation.model.ParticipationRequest;
 import ru.practicum.main.participation.repository.ParticipationRepository;
-import ru.practicum.main.user.repository.UserRepository;
+import ru.practicum.main.user.service.UserServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,25 +28,23 @@ import java.util.stream.Collectors;
 public class ParticipationServiceImpl implements ParticipationService {
     private final ParticipationRepository participationRepository;
     private final EventRepository eventRepository;
-    private final UserRepository userRepository;
+    private final UserServiceImpl userService;
 
     @Transactional
     @Override
     public List<ParticipationRequestDto> getParticipationRequest(Long userId) {
-        if (userRepository.getUserById(userId) == null) {
-            throw new NotFoundException("User not found.");
-        }
+        userService.getUserById(userId);
         List<Long> eventIds = eventRepository.getEventsByInitiatorId(userId)
                 .stream()
                 .map(Event::getId)
                 .collect(Collectors.toList());
-        List<ParticipationRequest> list;
-        if (eventIds.size() == 0) {
-            list = participationRepository.getParticipationRequestsByRequester(userId);
+        if (eventIds.isEmpty()) {
+            return participationRepository.getParticipationRequestsByRequester(userId)
+                    .stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
         } else {
-            list = participationRepository.getParticipationRequestsByRequesterAndEventNotIn(userId, eventIds);
+            return participationRepository.getParticipationRequestsByRequesterAndEventNotIn(userId, eventIds)
+                    .stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
         }
-        return list.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
     }
 
     @Transactional
