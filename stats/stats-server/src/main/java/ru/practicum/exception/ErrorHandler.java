@@ -14,9 +14,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -29,13 +26,13 @@ import static ru.practicum.constant.Constants.DATE_FORMAT;
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<ApiError> handle(Exception ex) throws IOException {
+    public ResponseEntity<ApiError> handle(Exception ex) {
         ApiError apiError = ApiError.builder()
-                .errors(Collections.singletonList(error(ex)))
+                .errors(Collections.singletonList(ex.getLocalizedMessage()))
                 .status(HttpStatus.BAD_REQUEST)
                 .reason("Incorrectly made request.")
                 .message(ex.getLocalizedMessage())
-                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)))
                 .build();
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
@@ -74,16 +71,5 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
-    }
-
-
-    private String error(Exception e) throws IOException {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace();
-        String error = sw.toString();
-        sw.close();
-        pw.close();
-        return error;
     }
 }
