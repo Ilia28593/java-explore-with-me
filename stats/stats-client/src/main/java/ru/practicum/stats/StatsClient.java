@@ -3,11 +3,7 @@ package ru.practicum.stats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -25,7 +21,7 @@ public class StatsClient {
     protected final RestTemplate rest;
 
     @Autowired
-    public StatsClient(@Value("${STATS_SERVICE_URL}") String serverUrl, RestTemplateBuilder builder) {          //http://localhost:9090
+    public StatsClient(@Value("${STATS_SERVICE_URL}") String serverUrl, RestTemplateBuilder builder) {
 
         this.rest = builder
                 .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
