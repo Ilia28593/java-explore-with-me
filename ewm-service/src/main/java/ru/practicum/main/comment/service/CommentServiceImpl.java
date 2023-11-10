@@ -20,7 +20,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.main.constant.Constants.now;
+import static ru.practicum.main.constant.Constants.timeNow;
 
 @Slf4j
 @Service
@@ -33,23 +33,23 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentDto addCommentForUser(CommentDto commentDto) {
-        User user = userService.getUserById(commentDto.getAuthor());
-        Event event = eventService.getEventByID(commentDto.getEvent());
+        User user = userService.getUserIfExist(commentDto.getAuthor());
+        Event event = eventService.getEventIfExist(commentDto.getEvent());
         return CommentMapper.toCommentDto(commentRepository.save(CommentMapper.toComment(commentDto, user, event)));
     }
 
     @Transactional
     @Override
     public CommentDto updateCommentForUser(Long commentId, CommentDto commentDto) {
-        User user = userService.getUserById(commentDto.getAuthor());
-        Event event = eventService.getEventByID(commentDto.getEvent());
+        User user = userService.getUserIfExist(commentDto.getAuthor());
+        Event event = eventService.getEventIfExist(commentDto.getEvent());
 
         if (!commentRepository.getCommentById(commentId).getAuthor().getId().equals(commentDto.getAuthor())) {
             throw new NotFoundException("The user has no comment.");
         }
 
         Comment actualComment = CommentMapper.toComment(commentDto, user, event);
-        Comment comment = getCommentById(commentId);
+        Comment comment = getCommentIfExist(commentId);
         actualComment.setId(comment.getId());
 
         if (actualComment.getText() == null || actualComment.getText().isBlank()) {
@@ -64,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
             actualComment.setCreatedOn(actualComment.getCreatedOn());
         }
 
-        actualComment.setUpdatedOn(now());
+        actualComment.setUpdatedOn(timeNow());
 
         return CommentMapper.toCommentDto(commentRepository.save(actualComment));
     }
@@ -89,13 +89,13 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentDto getCommentByIdForUser(Long commentId) {
-        return CommentMapper.toCommentDto(getCommentById(commentId));
+        return CommentMapper.toCommentDto(getCommentIfExist(commentId));
     }
 
     @Transactional
     @Override
     public void deleteCommentByIdForUser(Long userId, Long commentId) {
-        Comment comment = getCommentById(commentId);
+        Comment comment = getCommentIfExist(commentId);
         if (!comment.getAuthor().getId().equals(userId)) {
             throw new IllegalArgumentException("The user has no comments.");
         } else {
@@ -117,7 +117,7 @@ public class CommentServiceImpl implements CommentService {
         } else {
             return commentsDto.stream()
                     .map((CommentDto commentDto) -> CommentMapper.toCommentWithFullAuthorDto(commentDto,
-                            userService.getUserById(commentDto.getAuthor())))
+                            userService.getUserIfExist(commentDto.getAuthor())))
                     .collect(Collectors.toList());
         }
     }
@@ -125,21 +125,24 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentWithFullAuthorDto getCommentByIdForAdmin(Long commentId) {
-        CommentDto commentDto = CommentMapper.toCommentDto(getCommentById(commentId));
-        return CommentMapper.toCommentWithFullAuthorDto(commentDto, userService.getUserById(commentDto.getAuthor()));
+        CommentDto commentDto = CommentMapper.toCommentDto(getCommentIfExist(commentId));
+        return CommentMapper.toCommentWithFullAuthorDto(commentDto, userService.getUserIfExist(commentDto.getAuthor()));
     }
 
     @Transactional
     @Override
     public void deleteCommentByIdForAdmin(Long userId, Long commentId) {
-        getCommentById(commentId);
+        getCommentIfExist(commentId);
         commentRepository.deleteById(commentId);
     }
 
 
-    public Comment getCommentById(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(() -> {
-            throw new NotFoundException(String.format("Comment not found by Id %s.", commentId));
-        });
+    public Comment getCommentIfExist(Long commentId) {
+        Comment comment = commentRepository.getCommentById(commentId);
+        if (comment == null) {
+            throw new NotFoundException("Comment is not exist.");
+        } else {
+            return comment;
+        }
     }
 }

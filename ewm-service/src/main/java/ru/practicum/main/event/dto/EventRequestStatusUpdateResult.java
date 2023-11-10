@@ -1,14 +1,11 @@
 package ru.practicum.main.event.dto;
 
 import lombok.*;
-import lombok.experimental.Accessors;
 import ru.practicum.main.participation.dto.ParticipationRequestDto;
 
 import java.util.List;
 
-@Getter
-@Setter
-@Accessors(chain = true)
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

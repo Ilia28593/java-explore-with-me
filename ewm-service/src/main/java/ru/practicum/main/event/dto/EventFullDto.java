@@ -1,18 +1,16 @@
 package ru.practicum.main.event.dto;
 
 import lombok.*;
-import lombok.experimental.Accessors;
 import ru.practicum.main.category.dto.CategoryDto;
 import ru.practicum.main.location.dto.LocationDto;
 import ru.practicum.main.user.dto.UserShortDto;
 
-@Getter
-@Setter
-@Accessors(chain = true)
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventFullDto {
+
     private Long id;
     private String title;
     private String annotation;

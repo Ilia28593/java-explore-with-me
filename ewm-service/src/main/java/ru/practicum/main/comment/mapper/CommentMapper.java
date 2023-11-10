@@ -6,7 +6,7 @@ import ru.practicum.main.comment.model.Comment;
 import ru.practicum.main.event.model.Event;
 import ru.practicum.main.user.model.User;
 
-import static ru.practicum.main.constant.Constants.now;
+import static ru.practicum.main.constant.Constants.timeNow;
 
 public class CommentMapper {
 
@@ -37,7 +37,7 @@ public class CommentMapper {
                 .text(commentDto.getText())
                 .event(event)
                 .author(user)
-                .createdOn(now())
+                .createdOn(timeNow())
                 .build();
     }
 }

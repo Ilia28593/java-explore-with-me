@@ -24,14 +24,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static ru.practicum.main.constant.Constants.DATE_FORMAT;
-
 @RestControllerAdvice
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<ApiError> handle(Exception ex) throws IOException {
-        ApiError apiError = getApiError(Collections.singletonList(error(ex)), "Incorrectly made request.", ex.getLocalizedMessage());
+        ApiError apiError = ApiError.builder()
+                .errors(Collections.singletonList(error(ex)))
+                .status(HttpStatus.BAD_REQUEST)
+                .reason("Incorrectly made request.")
+                .message(ex.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
@@ -44,7 +48,14 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(error.getField());
         }
-        ApiError apiError = getApiError(errors, "The required object was not found.", ex.getLocalizedMessage());
+        ApiError apiError = ApiError.builder()
+                .errors(errors)
+                .status(HttpStatus.BAD_REQUEST)
+                .reason("The required object was not found.")
+                .message(ex.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
+
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
@@ -54,7 +65,14 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             errors.add(violation.getMessage());
         }
-        ApiError apiError = getApiError(errors, "The required object was not found.", ex.getLocalizedMessage());
+        ApiError apiError = ApiError.builder()
+                .errors(errors)
+                .status(HttpStatus.BAD_REQUEST)
+                .reason("The required object was not found.")
+                .message(ex.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
+
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
@@ -73,72 +91,108 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)   // для всех ситуаций, если искомый объект не найден
     public ApiError handle(final NotFoundException e) throws IOException {
-        return getApiError(error(e), HttpStatus.NOT_FOUND, "The required object was not found.", e.getLocalizedMessage());
+        return ApiError.builder()
+                .errors(Collections.singletonList(error(e)))
+                .status(HttpStatus.NOT_FOUND)
+                .reason("The required object was not found.")
+                .message(e.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
     }
 
     @ExceptionHandler(ValidationCategoryException.class)
     @ResponseStatus(HttpStatus.CONFLICT)   // Категория существует
     public ApiError handle(final ValidationCategoryException e) throws IOException {
-        return getApiError(error(e), HttpStatus.CONFLICT, "For the requested operation the conditions are not met.", e.getLocalizedMessage());
+        return ApiError.builder()
+                .errors(Collections.singletonList(error(e)))
+                .status(HttpStatus.CONFLICT)
+                .reason("For the requested operation the conditions are not met.")
+                .message(e.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
     }
 
     @ExceptionHandler(DuplicateNameException.class)
     @ResponseStatus(HttpStatus.CONFLICT)  //если есть дубликат Name.
     public ApiError handleThrowable(final DuplicateNameException e) throws IOException {
-        return getApiError(error(e), HttpStatus.CONFLICT, "The name is exists", e.getLocalizedMessage());
+        return ApiError.builder()
+                .errors(Collections.singletonList(error(e)))
+                .status(HttpStatus.CONFLICT)
+                .reason("CONFLICT CONFLICT The name is exists, dublicate!!!!!!!!!!!!!!!!!!!!!!")
+                .message(e.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
     @ResponseStatus(HttpStatus.CONFLICT)  //если есть дубликат Email.
     public ApiError handleThrowable(final DuplicateEmailException e) throws IOException {
-        return getApiError(error(e), HttpStatus.CONFLICT, "The email is exists, dublicate!", e.getLocalizedMessage());
+        return ApiError.builder()
+                .errors(Collections.singletonList(error(e)))
+                .status(HttpStatus.CONFLICT)
+                .reason("CONFLICT CONFLICT The email is exists, dublicate!!!!!!!!!!!!!!!!!!!!!!")
+                .message(e.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
     }
 
     @ExceptionHandler(EventDateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleThrowable(final EventDateException e) throws IOException {
-        return getApiError(error(e), HttpStatus.CONFLICT, "Incorrectly  time", e.getLocalizedMessage());
+        return ApiError.builder()
+                .errors(Collections.singletonList(error(e)))
+                .status(HttpStatus.CONFLICT)
+                .reason("Incorrectly  time")
+                .message(e.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
     }
 
     @ExceptionHandler(StateArgumentException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleThrowable(final StateArgumentException e) throws IOException {
-        return getApiError(error(e), HttpStatus.CONFLICT, " The required object was not found.", e.getLocalizedMessage());
+        return ApiError.builder()
+                .errors(Collections.singletonList(error(e)))
+                .status(HttpStatus.CONFLICT)
+                .reason("CONFLICT CONFLICT The required object was not found.!!!!!!!!!!!!!!!!!!!!!!")
+                .message(e.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
     }
 
     @ExceptionHandler(OverflowLimitException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleThrowable(final OverflowLimitException e) throws IOException {
-        return getApiError(error(e), HttpStatus.CONFLICT, "The participant limit has been reached", e.getLocalizedMessage());
+        return ApiError.builder()
+                .errors(Collections.singletonList(error(e)))
+                .status(HttpStatus.CONFLICT)
+                .reason("The participant limit has been reached")
+                .message(e.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
     }
 
     @ExceptionHandler(StatusPerticipationRequestException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleThrowable(final StatusPerticipationRequestException e) throws IOException {
-        return getApiError(error(e), HttpStatus.CONFLICT, "The status Request NOT PENDING", e.getLocalizedMessage());
+        return ApiError.builder()
+                .errors(Collections.singletonList(error(e)))
+                .status(HttpStatus.CONFLICT)
+                .reason("The status Request NOT PENDING")
+                .message(e.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
     }
 
     @ExceptionHandler(DuplicateParticipationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleThrowable(final DuplicateParticipationException e) throws IOException {
-        return getApiError(error(e), HttpStatus.CONFLICT, "Request has been", e.getLocalizedMessage());
-    }
-
-    private static ApiError getApiError(List<String> errors, String reason, String ex) {
-        return new ApiError()
-                .setErrors(errors)
-                .setStatus(HttpStatus.BAD_REQUEST)
-                .setReason(reason)
-                .setMessage(ex)
-                .setTimestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
-    }
-
-    private ApiError getApiError(String e, HttpStatus conflict, String requestHasBeen, String e1) {
-        return new ApiError()
-                .setErrors(Collections.singletonList(e))
-                .setStatus(conflict)
-                .setReason(requestHasBeen)
-                .setMessage(e1)
-                .setTimestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
+        return ApiError.builder()
+                .errors(Collections.singletonList(error(e)))
+                .status(HttpStatus.CONFLICT)
+                .reason("Request has been")
+                .message(e.getLocalizedMessage())
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
     }
 }

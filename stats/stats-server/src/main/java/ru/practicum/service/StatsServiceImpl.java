@@ -1,38 +1,39 @@
 package ru.practicum.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.mapper.StatsMapper;
-import ru.practicum.repository.StatsRepository;
 import ru.practicum.statsDto.EndpointHitDto;
 import ru.practicum.statsDto.ViewStats;
+import ru.practicum.model.EndpointHit;
+import ru.practicum.repository.StatsRepository;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.List;
-
-import static ru.practicum.constant.Constants.DATE_FORMAT;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class StatsServiceImpl implements StatsService {
     private final StatsRepository statsRepository;
 
-    @Override
-    public EndpointHitDto createStatHit(EndpointHitDto endpointHitDto) {
-        return StatsMapper.toEndpointHitDto(statsRepository.save(StatsMapper.toEndpointHit(endpointHitDto)));
+    @Autowired
+    public StatsServiceImpl(StatsRepository statsRepository) {
+        this.statsRepository = statsRepository;
     }
 
     @Override
-    public List<ViewStats> getStatHit(LocalDateTime start, LocalDateTime end, Collection<String> uris, boolean unique) {
+    public EndpointHitDto addRequest(EndpointHitDto endpointHitDto) {
+        EndpointHit endpointHit = StatsMapper.toEndpointHit(endpointHitDto);
+
+        return StatsMapper.toEndpointHitDto(statsRepository.save(endpointHit));
+    }
+
+    @Override
+    public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
 
         if (end.isBefore(start)) {
-            throw new IllegalArgumentException(String.format("Time end %s can not be after start %s",
-                    end.format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
-                    start.format(DateTimeFormatter.ofPattern(DATE_FORMAT))));
+            throw new IllegalArgumentException("The time of the end cannot be earlier than the time of the beginning!");
         }
 
         if (!unique) {

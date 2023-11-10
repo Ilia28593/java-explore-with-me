@@ -1,7 +1,6 @@
 package ru.practicum.model;
 
 import lombok.*;
-import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,14 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "endpoint_hit")
-@Accessors(chain = true)
 public class EndpointHit {
 
     @Id

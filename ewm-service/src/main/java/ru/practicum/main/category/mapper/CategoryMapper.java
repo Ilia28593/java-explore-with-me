@@ -7,13 +7,15 @@ import ru.practicum.main.category.model.Category;
 public class CategoryMapper {
 
     public static Category toCategory(NewCategoryDto newCategoryDto) {
-        return new Category()
-                .setName(newCategoryDto.getName());
-    }
+    return Category.builder()
+            .name(newCategoryDto.getName())
+            .build();
+}
 
     public static CategoryDto toCategoryDto(Category category) {
-        return new CategoryDto()
-                .setId(category.getId())
-                .setName(category.getName());
+        return CategoryDto.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .build();
     }
 }

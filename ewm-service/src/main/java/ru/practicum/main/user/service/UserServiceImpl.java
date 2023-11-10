@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.exception.DuplicateEmailException;
 import ru.practicum.main.exception.NotFoundException;
+import ru.practicum.main.user.mapper.UserMapper;
 import ru.practicum.main.user.dto.NewUserRequest;
 import ru.practicum.main.user.dto.UserDto;
-import ru.practicum.main.user.mapper.UserMapper;
 import ru.practicum.main.user.model.User;
 import ru.practicum.main.user.repository.UserRepository;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -29,10 +30,22 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @Override
+    public User getUserIfExist(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user == null) {
+            throw new NotFoundException("User is not exist.");
+        } else {
+            return user.get();
+        }
+    }
+
     @Transactional
     @Override
-    public Collection<UserDto> getUsersAdmin(Collection<Long> ids, Integer from, Integer size) {
+    public List<UserDto> getUsersAdmin(List<Long> ids, Integer from, Integer size) {
+
         Pageable pageable = PageRequest.of(from / size, size);
+
         if (ids == null || ids.size() == 0) {
             return userRepository.findAll(pageable).stream()
                     .map(UserMapper::toUserDto)
@@ -46,26 +59,24 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDto addUserAdmin(NewUserRequest userRequest) {
-        User user = UserMapper.toUser(userRequest);
+    public UserDto addUserAdmin(NewUserRequest newUserRequest) {
+        User user = UserMapper.toUser(newUserRequest);
+        UserDto userDto;
         try {
-            return UserMapper.toUserDto(userRepository.saveAndFlush(user));
+            userDto = UserMapper.toUserDto(userRepository.saveAndFlush(user));
         } catch (DataIntegrityViolationException e) {
             log.info("Duplicate email address");
-            throw new DuplicateEmailException(userRequest.getEmail());
+            throw new DuplicateEmailException(e.getMessage());
         }
+        return userDto;
     }
 
     @Transactional
     @Override
     public void deleteUserAdmin(Long userId) {
-        getUserById(userId);
+        if (userRepository.getUserById(userId) == null) {
+            throw new NotFoundException("User not found.");
+        }
         userRepository.removeUserById(userId);
-    }
-
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> {
-            throw new NotFoundException("User not found by id.");
-        });
     }
 }

@@ -7,9 +7,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.main.category.mapper.CategoryMapper;
 import ru.practicum.main.category.dto.CategoryDto;
 import ru.practicum.main.category.dto.NewCategoryDto;
-import ru.practicum.main.category.mapper.CategoryMapper;
 import ru.practicum.main.category.model.Category;
 import ru.practicum.main.category.repository.CategoryRepository;
 import ru.practicum.main.event.repository.EventRepository;
@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDto updateCategoryAdmin(Long catId, NewCategoryDto newCategoryDto) {
-        getCategory(catId);
+        getCategoryByIdIfExist(catId);
         Category newCategory = CategoryMapper.toCategory(newCategoryDto);
         newCategory.setId(catId);
         CategoryDto categoryDto;
@@ -57,10 +57,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public void deleteCategoryAdmin(Long catId) {
-        getCategory(catId);
-        getCategory(catId);
+        getCategoryByIdIfExist(catId);
         if (eventRepository.findFirstByCategoryId(catId) != null) {
-            throw new ValidationCategoryException("Category has not been deleted.");
+            throw new ValidationCategoryException("The category has not been deleted.");
         }
         categoryRepository.deleteCategoryById(catId);
     }
@@ -69,7 +68,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public List<CategoryDto> getCategoryPublic(Integer from, Integer size) {
+
         Pageable pageable = PageRequest.of(from / size, size);
+
         return categoryRepository.findAll(pageable)
                 .stream()
                 .map(CategoryMapper::toCategoryDto)
@@ -79,14 +80,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDto getCategoryByIdPublic(Long catId) {
-        return CategoryMapper.toCategoryDto(getCategory(catId));
+        return CategoryMapper.toCategoryDto(getCategoryByIdIfExist(catId));
     }
 
-    private Category getCategory(Long categoryId) {
-        Category category = categoryRepository.getById(categoryId);
-        if (category == null) {
+    public Category getCategoryByIdIfExist(Long catId) {
+        if (categoryRepository.findCategoryById(catId) == null) {
             throw new NotFoundException("Category not found.");
         }
-        return category;
+        return categoryRepository.findCategoryById(catId);
     }
 }

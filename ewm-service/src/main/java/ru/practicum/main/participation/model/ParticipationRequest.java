@@ -1,7 +1,6 @@
 package ru.practicum.main.participation.model;
 
 import lombok.*;
-import lombok.experimental.Accessors;
 import ru.practicum.main.event.model.Status;
 
 import javax.persistence.Column;
@@ -19,7 +18,6 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
 @Table(name = "participations")
 public class ParticipationRequest {
 

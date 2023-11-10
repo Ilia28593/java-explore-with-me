@@ -1,7 +1,6 @@
 package ru.practicum.main.compilation.model;
 
 import lombok.*;
-import lombok.experimental.Accessors;
 import ru.practicum.main.event.model.Event;
 
 import javax.persistence.CascadeType;
@@ -19,7 +18,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Accessors(chain = true)
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "compilations")
@@ -30,8 +29,7 @@ public class Compilation {
     private Long id;
 
     @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "events_compilations",
-            joinColumns = {@JoinColumn(name = "compilation_id")},
+    @JoinTable(name = "events_compilations", joinColumns = {@JoinColumn(name = "compilation_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
     private Set<Event> events = new HashSet<>();
 
