@@ -501,4 +501,12 @@ public class EventServiceImpl implements EventService {
 
         return EventMapper.toEventFullDto(event);
     }
+
+    @Override
+    public Event getEventByID(Long eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> {
+                    throw new NotFoundException(String.format("Event no found %s", eventId));
+                });
+    }
 }
