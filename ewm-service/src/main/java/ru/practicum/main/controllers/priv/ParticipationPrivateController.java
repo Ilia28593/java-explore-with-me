@@ -29,7 +29,7 @@ public class ParticipationPrivateController {
 
     @GetMapping
     public ResponseEntity<List<ParticipationRequestDto>> getParticipationRequestPrivate(@NotNull @Positive @PathVariable Long userId) {
-        return new ResponseEntity<>(participationService.getParticipationRequest(userId), HttpStatus.OK);
+        return new ResponseEntity<>(participationService.getParticipationRequestPrivate(userId), HttpStatus.OK);
     }
 
     @PatchMapping("/{requestId}/cancel")

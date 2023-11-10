@@ -9,12 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.exception.DuplicateEmailException;
 import ru.practicum.main.exception.NotFoundException;
-import ru.practicum.main.user.mapper.UserMapper;
 import ru.practicum.main.user.dto.NewUserRequest;
 import ru.practicum.main.user.dto.UserDto;
+import ru.practicum.main.user.mapper.UserMapper;
 import ru.practicum.main.user.model.User;
 import ru.practicum.main.user.repository.UserRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public List<UserDto> getUsersAdmin(List<Long> ids, Integer from, Integer size) {
+    public Collection<UserDto> getUsersAdmin(Collection<Long> ids, Integer from, Integer size) {
 
         Pageable pageable = PageRequest.of(from / size, size);
 
