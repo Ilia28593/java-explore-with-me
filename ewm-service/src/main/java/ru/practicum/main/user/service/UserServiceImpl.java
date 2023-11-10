@@ -59,24 +59,20 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDto addUserAdmin(NewUserRequest newUserRequest) {
-        User user = UserMapper.toUser(newUserRequest);
-        UserDto userDto;
+    public UserDto addUserAdmin(NewUserRequest userRequest) {
+        User user = UserMapper.toUser(userRequest);
         try {
-            userDto = UserMapper.toUserDto(userRepository.saveAndFlush(user));
+            return UserMapper.toUserDto(userRepository.saveAndFlush(user));
         } catch (DataIntegrityViolationException e) {
             log.info("Duplicate email address");
-            throw new DuplicateEmailException(e.getMessage());
+            throw new DuplicateEmailException(userRequest.getEmail());
         }
-        return userDto;
     }
 
     @Transactional
     @Override
     public void deleteUserAdmin(Long userId) {
-        if (userRepository.getUserById(userId) == null) {
-            throw new NotFoundException("User not found.");
-        }
+        getUserById(userId);
         userRepository.removeUserById(userId);
     }
 
