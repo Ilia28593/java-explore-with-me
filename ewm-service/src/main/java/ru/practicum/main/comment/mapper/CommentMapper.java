@@ -11,33 +11,30 @@ import static ru.practicum.main.constant.Constants.timeNow;
 public class CommentMapper {
 
     public static CommentWithFullAuthorDto toCommentWithFullAuthorDto(CommentDto commentDto, User user) {
-        return CommentWithFullAuthorDto.builder()
-                .id(commentDto.getId())
-                .text(commentDto.getText())
-                .event(commentDto.getEvent())
-                .createdOn(commentDto.getCreatedOn())
-                .updatedOn(commentDto.getUpdatedOn())
-                .author(user)
-                .build();
+        return new CommentWithFullAuthorDto()
+                .setId(commentDto.getId())
+                .setText(commentDto.getText())
+                .setEvent(commentDto.getEvent())
+                .setCreatedOn(commentDto.getCreatedOn())
+                .setUpdatedOn(commentDto.getUpdatedOn())
+                .setAuthor(user);
     }
 
     public static CommentDto toCommentDto(Comment comment) {
-        return CommentDto.builder()
-                .id(comment.getId())
-                .text(comment.getText())
-                .event(comment.getEvent().getId())
-                .author(comment.getAuthor().getId())
-                .createdOn(comment.getCreatedOn())
-                .updatedOn(comment.getUpdatedOn())
-                .build();
+        return new CommentDto()
+                .setId(comment.getId())
+                .setText(comment.getText())
+                .setEvent(comment.getEvent().getId())
+                .setAuthor(comment.getAuthor().getId())
+                .setCreatedOn(comment.getCreatedOn())
+                .setUpdatedOn(comment.getUpdatedOn());
     }
 
     public static Comment toComment(CommentDto commentDto, User user, Event event) {
-        return Comment.builder()
-                .text(commentDto.getText())
-                .event(event)
-                .author(user)
-                .createdOn(timeNow())
-                .build();
+        return new Comment()
+                .setText(commentDto.getText())
+                .setEvent(event)
+                .setAuthor(user)
+                .setUpdatedOn(timeNow());
     }
 }
