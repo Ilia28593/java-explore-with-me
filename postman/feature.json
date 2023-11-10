@@ -1,4 +1,10 @@
 {
+  "info": {
+    "_postman_id": "dcd6f82d-4e92-4b6d-8920-a42cc64bb528",
+    "name": "feature",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "28071147"
+  },
   "item": [
     {
       "name": "Create user",
