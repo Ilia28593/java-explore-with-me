@@ -79,4 +79,10 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.removeUserById(userId);
     }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> {
+            throw new NotFoundException("User not found by id.");
+        });
+    }
 }

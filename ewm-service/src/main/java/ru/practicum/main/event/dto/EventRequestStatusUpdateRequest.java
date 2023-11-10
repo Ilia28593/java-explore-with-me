@@ -1,12 +1,15 @@
 package ru.practicum.main.event.dto;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@Accessors(chain = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
