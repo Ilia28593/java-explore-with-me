@@ -5,12 +5,13 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
-@Builder
 @EqualsAndHashCode
 @AllArgsConstructor
+@Accessors(chain = true)
 public class ViewStats {
 
     private String app;

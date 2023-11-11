@@ -20,7 +20,8 @@ public class StatsController {
     private final StatsClient statsClient;
 
     @PostMapping("/hit")
-    public ResponseEntity<Object> addUser(HttpServletRequest request, @RequestBody EndpointHitDto endpointHitDto) {
+    public ResponseEntity<Object> addUser(HttpServletRequest request,
+                                          @RequestBody EndpointHitDto endpointHitDto) {
         return statsClient.addRequest(request.getRemoteAddr(), endpointHitDto);
     }
 
@@ -30,6 +31,7 @@ public class StatsController {
                                          @RequestParam(name = "end") String end,
                                          @RequestParam(required = false, name = "uris") String[] uris,
                                          @RequestParam(name = "unique", defaultValue = "false") boolean unique) {
-        return statsClient.getStats(request.getRemoteAddr(), start, end, uris, unique);
+        String ipResource = request.getRemoteAddr();
+        return statsClient.getStats(ipResource, start, end, uris, unique);
     }
 }
