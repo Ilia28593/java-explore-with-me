@@ -47,25 +47,20 @@ public class CommentServiceImpl implements CommentService {
         if (!commentRepository.getCommentById(commentId).getAuthor().getId().equals(commentDto.getAuthor())) {
             throw new NotFoundException("User has no comment.");
         }
-
         Comment actualComment = CommentMapper.toComment(commentDto, user, event);
         Comment comment = getComment(commentId);
         actualComment.setId(comment.getId());
-
         if (actualComment.getText() == null || actualComment.getText().isBlank()) {
             actualComment.setText(comment.getText());
         } else {
             actualComment.setText(actualComment.getText());
         }
-
         if (actualComment.getCreatedOn() == null) {
             actualComment.setCreatedOn(comment.getCreatedOn());
         } else {
             actualComment.setCreatedOn(actualComment.getCreatedOn());
         }
-
         actualComment.setUpdatedOn(timeNow());
-
         return CommentMapper.toCommentDto(commentRepository.save(actualComment));
     }
 
@@ -74,13 +69,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> getCommentsForUser(Long eventId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
-
         List<CommentDto> commentsDto = commentRepository.getCommentsByEventId(eventId, pageable).stream()
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
-
         if (commentsDto.isEmpty()) {
-            throw new NotFoundException("The event has no comments.");
+            throw new NotFoundException("Event has no comments.");
         } else {
             return commentsDto;
         }
@@ -97,7 +90,7 @@ public class CommentServiceImpl implements CommentService {
     public void deleteCommentByIdForUser(Long userId, Long commentId) {
         Comment comment = getComment(commentId);
         if (!comment.getAuthor().getId().equals(userId)) {
-            throw new IllegalArgumentException("The user has no comments.");
+            throw new IllegalArgumentException("User has no comments.");
         } else {
             commentRepository.deleteById(commentId);
         }
@@ -107,13 +100,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentWithFullAuthorDto> getCommentsForAdmin(Long eventId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
-
         List<CommentDto> commentsDto = commentRepository.getCommentsByEventId(eventId, pageable).stream()
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
-
         if (commentsDto.isEmpty()) {
-            throw new NotFoundException("The event has no comments.");
+            throw new NotFoundException("Event has no comments.");
         } else {
             return commentsDto.stream()
                     .map((CommentDto commentDto) -> CommentMapper.toCommentWithFullAuthorDto(commentDto,
