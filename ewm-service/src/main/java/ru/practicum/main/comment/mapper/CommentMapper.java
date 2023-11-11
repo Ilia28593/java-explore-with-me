@@ -14,7 +14,7 @@ public class CommentMapper {
         return new CommentWithFullAuthorDto()
                 .setId(commentDto.getId())
                 .setText(commentDto.getText())
-                .setEvent(commentDto.getEventId())
+                .setEvent(commentDto.getEvent())
                 .setCreatedOn(commentDto.getCreatedOn())
                 .setUpdatedOn(commentDto.getUpdatedOn())
                 .setAuthor(user);
@@ -24,10 +24,10 @@ public class CommentMapper {
         return new CommentDto()
                 .setId(comment.getId())
                 .setText(comment.getText())
-                .setEventId(comment.getEvent().getId())
+                .setEvent(comment.getEvent().getId())
                 .setCreatedOn(comment.getCreatedOn())
                 .setUpdatedOn(comment.getUpdatedOn())
-                .setAuthorId(comment.getAuthor().getId());
+                .setAuthor(comment.getAuthor().getId());
     }
 
     public static Comment toComment(CommentDto commentDto, User user, Event event) {

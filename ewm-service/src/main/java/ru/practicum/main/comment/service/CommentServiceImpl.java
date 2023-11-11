@@ -33,33 +33,39 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentDto addCommentForUser(CommentDto commentDto) {
-        User user = userService.getUserById(commentDto.getAuthorId());
-        Event event = eventService.getEventFindBuId(commentDto.getEventId());
+        User user = userService.getUserById(commentDto.getAuthor());
+        Event event = eventService.getEventFindBuId(commentDto.getEvent());
         return CommentMapper.toCommentDto(commentRepository.save(CommentMapper.toComment(commentDto, user, event)));
     }
 
     @Transactional
     @Override
     public CommentDto updateCommentForUser(Long commentId, CommentDto commentDto) {
-        User user = userService.getUserById(commentDto.getAuthorId());
-        Event event = eventService.getEventFindBuId(commentDto.getEventId());
-        if (!commentRepository.getCommentById(commentId).getAuthor().getId().equals(commentDto.getAuthorId())) {
+        User user = userService.getUserById(commentDto.getAuthor());
+        Event event = eventService.getEventFindBuId(commentDto.getEvent());
+
+        if (!commentRepository.getCommentById(commentId).getAuthor().getId().equals(commentDto.getAuthor())) {
             throw new NotFoundException("User has no comment.");
         }
+
         Comment actualComment = CommentMapper.toComment(commentDto, user, event);
         Comment comment = getComment(commentId);
         actualComment.setId(comment.getId());
+
         if (actualComment.getText() == null || actualComment.getText().isBlank()) {
             actualComment.setText(comment.getText());
         } else {
             actualComment.setText(actualComment.getText());
         }
+
         if (actualComment.getCreatedOn() == null) {
             actualComment.setCreatedOn(comment.getCreatedOn());
         } else {
             actualComment.setCreatedOn(actualComment.getCreatedOn());
         }
+
         actualComment.setUpdatedOn(timeNow());
+
         return CommentMapper.toCommentDto(commentRepository.save(actualComment));
     }
 
@@ -68,11 +74,13 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> getCommentsForUser(Long eventId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
+
         List<CommentDto> commentsDto = commentRepository.getCommentsByEventId(eventId, pageable).stream()
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
+
         if (commentsDto.isEmpty()) {
-            throw new NotFoundException("Event has no comments.");
+            throw new NotFoundException("The event has no comments.");
         } else {
             return commentsDto;
         }
@@ -89,7 +97,7 @@ public class CommentServiceImpl implements CommentService {
     public void deleteCommentByIdForUser(Long userId, Long commentId) {
         Comment comment = getComment(commentId);
         if (!comment.getAuthor().getId().equals(userId)) {
-            throw new IllegalArgumentException("User has no comments.");
+            throw new IllegalArgumentException("The user has no comments.");
         } else {
             commentRepository.deleteById(commentId);
         }
@@ -99,15 +107,17 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentWithFullAuthorDto> getCommentsForAdmin(Long eventId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
+
         List<CommentDto> commentsDto = commentRepository.getCommentsByEventId(eventId, pageable).stream()
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
+
         if (commentsDto.isEmpty()) {
-            throw new NotFoundException("Event has no comments.");
+            throw new NotFoundException("The event has no comments.");
         } else {
             return commentsDto.stream()
                     .map((CommentDto commentDto) -> CommentMapper.toCommentWithFullAuthorDto(commentDto,
-                            userService.getUserById(commentDto.getAuthorId())))
+                            userService.getUserById(commentDto.getAuthor())))
                     .collect(Collectors.toList());
         }
     }
@@ -116,7 +126,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentWithFullAuthorDto getCommentByIdForAdmin(Long commentId) {
         CommentDto commentDto = CommentMapper.toCommentDto(getComment(commentId));
-        return CommentMapper.toCommentWithFullAuthorDto(commentDto, userService.getUserById(commentDto.getAuthorId()));
+        return CommentMapper.toCommentWithFullAuthorDto(commentDto, userService.getUserById(commentDto.getAuthor()));
     }
 
     @Transactional
