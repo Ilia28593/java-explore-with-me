@@ -32,15 +32,15 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .reason("Incorrectly made request.")
                 .message(ex.getLocalizedMessage())
-                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)))
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
     public @NotNull ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                        @NonNull HttpHeaders headers,
-                                                                        @NonNull HttpStatus status,
-                                                                        @NonNull WebRequest request) {
+                                                        @NonNull HttpHeaders headers,
+                                                        @NonNull HttpStatus status,
+                                                        @NonNull WebRequest request) {
         List<String> errors = new ArrayList<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(error.getField());
@@ -50,7 +50,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .reason("The required object was not found.")
                 .message(ex.getLocalizedMessage())
-                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)))
+                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
 
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
