@@ -1,7 +1,7 @@
 # java-explore-with-me
 Template repository for ExploreWithMe project.
 
-https://github.com/Ilia28593/java-explore-with-me/pull/22
+https://github.com/Ilia28593/java-explore-with-me/pull/23
 
 Данное приложение — это афиша, в которой можно запланировать какое-либо событие для себя или компании.
 Ежедневно мы планируем мероприятия, куда и с кем сходить. Сложнее всего в таком планировании поиск информации и переговоры. 

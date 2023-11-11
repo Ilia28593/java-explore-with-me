@@ -32,7 +32,7 @@ public class EventPrivateController {
     public ResponseEntity<List<EventShortDto>> getEvents(@NotNull @Positive @PathVariable(required = false) Long userId,
                                                          @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                          @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return ResponseEntity.ok(eventService.getEventsPrivate(userId, from, size));
+        return new ResponseEntity<>(eventService.addEventPrivate(userId, newEventDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/{eventId}")
