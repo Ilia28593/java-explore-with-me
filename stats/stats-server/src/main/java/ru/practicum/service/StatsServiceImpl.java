@@ -31,9 +31,8 @@ public class StatsServiceImpl implements StatsService {
     public List<ViewStats> getStatHit(LocalDateTime start, LocalDateTime end, Collection<String> uris, boolean unique) {
 
         if (end.isBefore(start)) {
-            throw new IllegalArgumentException("The time of the end cannot be earlier than the time of the beginning!");
+            throw new IllegalArgumentException("Time ent not before start");
         }
-
         if (!unique) {
             if (uris == null) {
                 return statsRepository.findAllStats(start, end);

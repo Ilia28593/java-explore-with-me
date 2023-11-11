@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class CommentWithFullAuthorDto {
     private Long id;
     private String text;
-    private Long event;
+    private Long eventId;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
     private User author;

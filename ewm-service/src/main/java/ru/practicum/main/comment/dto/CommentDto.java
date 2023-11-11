@@ -1,17 +1,18 @@
 package ru.practicum.main.comment.dto;
 
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 public class CommentDto {
     private Long id;
     private String text;
-    private Long event;
-    private Long author;
+    private Long eventId;
+    private Long authorId;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
 }
