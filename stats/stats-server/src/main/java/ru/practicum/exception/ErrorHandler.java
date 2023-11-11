@@ -27,31 +27,29 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<ApiError> handle(Exception ex) {
-        ApiError apiError = ApiError.builder()
-                .errors(Collections.singletonList(ex.getLocalizedMessage()))
-                .status(HttpStatus.BAD_REQUEST)
-                .reason("Incorrectly made request.")
-                .message(ex.getLocalizedMessage())
-                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)))
-                .build();
+        ApiError apiError = new ApiError()
+                .setErrors(Collections.singletonList(ex.getLocalizedMessage()))
+                .setStatus(HttpStatus.BAD_REQUEST)
+                .setReason("Incorrectly made request.")
+                .setMessage(ex.getLocalizedMessage())
+                .setTimestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
     public @NotNull ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                        @NonNull HttpHeaders headers,
-                                                                        @NonNull HttpStatus status,
-                                                                        @NonNull WebRequest request) {
+                                                        @NonNull HttpHeaders headers,
+                                                        @NonNull HttpStatus status,
+                                                        @NonNull WebRequest request) {
         List<String> errors = new ArrayList<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(error.getField());
         }
-        ApiError apiError = ApiError.builder()
-                .errors(errors)
-                .status(HttpStatus.BAD_REQUEST)
-                .reason("The required object was not found.")
-                .message(ex.getLocalizedMessage())
-                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)))
-                .build();
+        ApiError apiError = new ApiError()
+                .setErrors(errors)
+                .setStatus(HttpStatus.BAD_REQUEST)
+                .setReason("The required object was not found.")
+                .setMessage(ex.getLocalizedMessage())
+                .setTimestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
 
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
@@ -62,13 +60,12 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             errors.add(violation.getMessage());
         }
-        ApiError apiError = ApiError.builder()
-                .errors(errors)
-                .status(HttpStatus.BAD_REQUEST)
-                .reason("The required object was not found.")
-                .message(ex.getLocalizedMessage())
-                .timestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)))
-                .build();
+        ApiError apiError = new ApiError()
+                .setErrors(errors)
+                .setStatus(HttpStatus.BAD_REQUEST)
+                .setReason("The required object was not found.")
+                .setMessage(ex.getLocalizedMessage())
+                .setTimestamp((LocalDateTime.now()).format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
 
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }

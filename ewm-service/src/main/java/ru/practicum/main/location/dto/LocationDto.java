@@ -3,8 +3,8 @@ package ru.practicum.main.location.dto;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)

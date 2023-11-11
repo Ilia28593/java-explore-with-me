@@ -1,7 +1,7 @@
 package ru.practicum.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.mapper.StatsMapper;
 import ru.practicum.repository.StatsRepository;
@@ -9,17 +9,18 @@ import ru.practicum.statsDto.EndpointHitDto;
 import ru.practicum.statsDto.ViewStats;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 
-import static ru.practicum.constant.Constants.DATE_FORMAT;
-
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class StatsServiceImpl implements StatsService {
     private final StatsRepository statsRepository;
+
+    @Autowired
+    public StatsServiceImpl(StatsRepository statsRepository) {
+        this.statsRepository = statsRepository;
+    }
 
     @Override
     public EndpointHitDto createStatHit(EndpointHitDto endpointHitDto) {
@@ -30,11 +31,8 @@ public class StatsServiceImpl implements StatsService {
     public List<ViewStats> getStatHit(LocalDateTime start, LocalDateTime end, Collection<String> uris, boolean unique) {
 
         if (end.isBefore(start)) {
-            throw new IllegalArgumentException(String.format("Time end %s can not be after start %s",
-                    end.format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
-                    start.format(DateTimeFormatter.ofPattern(DATE_FORMAT))));
+            throw new IllegalArgumentException("Time ent not before start");
         }
-
         if (!unique) {
             if (uris == null) {
                 return statsRepository.findAllStats(start, end);

@@ -12,7 +12,6 @@ import ru.practicum.main.user.dto.UserShortDto;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventShortDto {
-
     private Long id;
     private String annotation;
     private CategoryDto category;
