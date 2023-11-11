@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "dcd6f82d-4e92-4b6d-8920-a42cc64bb528",
-		"name": "feature",
+		"_postman_id": "c39927dd-c130-4faf-a6e0-98122613b80e",
+		"name": "Tests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28071147"
+		"_exporter_id": "23528763"
 	},
 	"item": [
 		{
@@ -47,6 +47,48 @@
 					"path": [
 						"admin",
 						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 201\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+							"});\r",
+							"pm.test(\"Has comment create response\", function () {\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Test comment 'id' field\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('id');\r",
+							"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/comments/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"comments",
+						"1"
 					]
 				}
 			},
@@ -277,48 +319,6 @@
 						}
 					}
 				},
-				"url": {
-					"raw": "http://localhost:8080/comments/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"comments",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get comment",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200 or 201\", function () {\r",
-							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
-							"});\r",
-							"pm.test(\"Has comment create response\", function () {\r",
-							"    pm.response.to.be.withBody;\r",
-							"    pm.response.to.be.json;\r",
-							"});\r",
-							"pm.test(\"Test comment 'id' field\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData).to.have.property('id');\r",
-							"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
 				"url": {
 					"raw": "http://localhost:8080/comments/1",
 					"protocol": "http",
