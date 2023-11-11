@@ -33,12 +33,9 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentDto addCommentForUser(CommentDto commentDto) {
-        return CommentMapper
-                .toCommentDto(commentRepository.save(
-                        CommentMapper.toComment(
-                                commentDto,
-                                userService.getUserById(commentDto.getAuthorId()),
-                                eventService.getEventFindBuId(commentDto.getEventId()))));
+        User user = userService.getUserById(commentDto.getAuthorId());
+        Event event = eventService.getEventFindBuId(commentDto.getEventId());
+        return CommentMapper.toCommentDto(commentRepository.save(CommentMapper.toComment(commentDto, user, event)));
     }
 
     @Transactional
