@@ -35,10 +35,9 @@ public class UserAdminController {
         return new ResponseEntity<>(userService.getUsersAdmin(ids, from, size), HttpStatus.OK);
     }
 
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{userId}")
-    public void deleteUser(@NonNull @Positive @PathVariable("userId") Long userId) {
+    public ResponseEntity<Void> deleteUser(@NonNull @Positive @PathVariable("userId") Long userId) {
         userService.deleteUserAdmin(userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
