@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
         Event event = eventService.getEventFindBuId(commentDto.getEvent());
 
         if (!commentRepository.getCommentById(commentId).getAuthor().getId().equals(commentDto.getAuthor())) {
-            throw new NotFoundException("The user has no comment.");
+            throw new NotFoundException("User has no comment.");
         }
 
         Comment actualComment = CommentMapper.toComment(commentDto, user, event);
@@ -135,6 +135,7 @@ public class CommentServiceImpl implements CommentService {
         getComment(commentId);
         commentRepository.deleteById(commentId);
     }
+
     public Comment getComment(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(() -> {
             throw new NotFoundException("Comment is not exist.");
