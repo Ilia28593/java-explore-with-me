@@ -49,23 +49,24 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     @Override
     public CompilationDto getCompilationByIdPublic(Long compId) {
-        return CompilationMapper.toCompilationDto(getCompilation(compId));
+        return CompilationMapper.toCompilationDto(getCompilationBuId(compId));
     }
 
 
     @Transactional
     @Override
     public CompilationDto addCompilationAdmin(NewCompilationDto newCompilationDto) {
-        Set<Event> setEvent = new HashSet<>();
-        if (newCompilationDto.getEvents() != null && !newCompilationDto.getEvents().isEmpty()) {
-            setEvent = eventRepository.getEventsByIdIn(newCompilationDto.getEvents());
+        Set<Event> listEvent = new HashSet<>();
+        if (newCompilationDto.getEvents() != null && newCompilationDto.getEvents().size() != 0) {
+            listEvent = eventRepository.getEventsByIdIn(newCompilationDto.getEvents());
         }
-        Compilation compilation = CompilationMapper.toCompilation(newCompilationDto, setEvent);
+
+        Compilation compilation = CompilationMapper.toCompilation(newCompilationDto, listEvent);
         CompilationDto compilationDto;
         try {
             compilationDto = CompilationMapper.toCompilationDto(compilationRepository.save(compilation));
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicateNameException("Title of the collection already exists.");
+            throw new DuplicateNameException("The title of the collection already exists.");
         }
         return compilationDto;
     }
@@ -74,7 +75,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     @Override
     public void deleteCompilationByIdAdmin(Long compId) {
-        getCompilation(compId);
+        getCompilationBuId(compId);
         compilationRepository.removeCompilationById(compId);
     }
 
@@ -82,7 +83,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     @Override
     public CompilationDto updateCompilationByIdAdmin(Long compId, UpdateCompilationRequest updateCompilationRequest) {
-        Compilation oldCompilation = getCompilation(compId);
+        Compilation oldCompilation = getCompilationBuId(compId);
         Set<Event> listEvent = new HashSet<>();
         if (updateCompilationRequest.getEvents() != null) {
             listEvent = eventRepository.getEventsByIdIn(updateCompilationRequest.getEvents());
@@ -93,11 +94,9 @@ public class CompilationServiceImpl implements CompilationService {
         return CompilationMapper.toCompilationDto(compilationRepository.save(compilation));
     }
 
-    private Compilation getCompilation(Long compId) {
-        Compilation compilation = compilationRepository.findCompilationById(compId);
-        if (compilation == null) {
-            throw new NotFoundException("The compilation not found.");
-        }
-        return compilation;
+    private Compilation getCompilationBuId(Long id) {
+        return compilationRepository.findById(id).orElseThrow(() -> {
+            throw new NotFoundException("Compilation not found.");
+        });
     }
 }
