@@ -11,10 +11,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class ApiError  {
-    private final List<String> errors;
-    private final String message;
-    private final String reason;
-    private final HttpStatus status;
-    private final String timestamp;
+public class ApiError {
+    private List<String> errors;
+    private String message;
+    private String reason;
+    private HttpStatus status;
+    private String timestamp;
 }
