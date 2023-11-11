@@ -21,10 +21,10 @@ public class CommentAdminController {
 
     private final CommentService commentService;
 
-
     @DeleteMapping("/users/{userId}/comments/{commentId}")
-    public void deleteCommentByIdForAdmin(@Positive @PathVariable Long userId, @Positive @PathVariable Long commentId) {
+    public ResponseEntity<Void> deleteCommentByIdForAdmin(@Positive @PathVariable Long userId, @Positive @PathVariable Long commentId) {
         commentService.deleteCommentByIdForAdmin(userId, commentId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/events/{eventId}/comments")
