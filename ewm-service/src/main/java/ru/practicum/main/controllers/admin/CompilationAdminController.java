@@ -33,9 +33,9 @@ public class CompilationAdminController {
                 HttpStatus.OK);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{compId}")
-    public void deleteCompilationByIdAdmin(@Positive @PathVariable("compId") Long compId) {
+    public ResponseEntity<Void> deleteCompilationByIdAdmin(@Positive @PathVariable("compId") Long compId) {
         compilationService.deleteCompilationByIdAdmin(compId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

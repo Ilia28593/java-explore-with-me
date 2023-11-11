@@ -2,7 +2,6 @@ package ru.practicum.main.controllers.pub;
 
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,15 +36,17 @@ public class EventPublicController {
                                                                        @RequestParam(required = false) LocalDateTime rangeEnd,
                                                                        @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                                                        @RequestParam(required = false) String sort,
-                                                                       @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                                                       @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return new ResponseEntity<>(eventService.getEventsAndStatsPublic(request, text, categories, paid, rangeStart,
-                rangeEnd, onlyAvailable, sort, from, size), HttpStatus.OK);
+                                                                       @PositiveOrZero @RequestParam(name = "from",
+                                                                               defaultValue = "0") Integer from,
+                                                                       @Positive @RequestParam(name = "size",
+                                                                               defaultValue = "10") Integer size) {
+        return ResponseEntity.ok(eventService.getEventsAndStatsPublic(request, text, categories, paid, rangeStart, rangeEnd,
+                onlyAvailable, sort, from, size));
     }
 
     @GetMapping("/{Id}")
     public ResponseEntity<EventFullDto> getEventByIdAndStatsPublic(HttpServletRequest request,
                                                                    @Positive @PathVariable("Id") Long eventId) {
-        return new ResponseEntity<>(eventService.getEventByIdAndStatsPublic(request, eventId), HttpStatus.OK);
+        return ResponseEntity.ok(eventService.getEventByIdAndStatsPublic(request, eventId));
     }
 }

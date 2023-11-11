@@ -1,7 +1,7 @@
 package ru.practicum.main.user.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,18 +21,16 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Transactional
     @Override
     public Collection<UserDto> getUsersAdmin(Collection<Long> ids, Integer from, Integer size) {
+
         Pageable pageable = PageRequest.of(from / size, size);
+
         if (ids == null || ids.size() == 0) {
             return userRepository.findAll(pageable).stream()
                     .map(UserMapper::toUserDto)
@@ -47,9 +45,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDto addUserAdmin(NewUserRequest userRequest) {
-        User user = UserMapper.toUser(userRequest);
         try {
-            return UserMapper.toUserDto(userRepository.saveAndFlush(user));
+            return UserMapper.toUserDto(userRepository.saveAndFlush(UserMapper.toUser(userRequest)));
         } catch (DataIntegrityViolationException e) {
             log.info("Duplicate email address");
             throw new DuplicateEmailException(userRequest.getEmail());
@@ -63,6 +60,7 @@ public class UserServiceImpl implements UserService {
         userRepository.removeUserById(userId);
     }
 
+    @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException("User not found by id.");

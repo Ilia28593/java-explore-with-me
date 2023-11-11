@@ -42,24 +42,22 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDto updateCategoryAdmin(Long catId, NewCategoryDto newCategoryDto) {
-        getCategory(catId);
+        getCategoryById(catId);
         Category newCategory = CategoryMapper.toCategory(newCategoryDto);
         newCategory.setId(catId);
-        CategoryDto categoryDto;
         try {
-            categoryDto = CategoryMapper.toCategoryDto(categoryRepository.saveAndFlush(newCategory));
+            return CategoryMapper.toCategoryDto(categoryRepository.saveAndFlush(newCategory));
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateNameException("Duplicate category name");
         }
-        return categoryDto;
     }
 
     @Transactional
     @Override
     public void deleteCategoryAdmin(Long catId) {
-        getCategory(catId);
+        getCategoryById(catId);
         if (eventRepository.findFirstByCategoryId(catId) != null) {
-            throw new ValidationCategoryException("Category has not been deleted.");
+            throw new ValidationCategoryException("The category has not been deleted.");
         }
         categoryRepository.deleteCategoryById(catId);
     }
@@ -68,7 +66,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public List<CategoryDto> getCategoryPublic(Integer from, Integer size) {
-
         Pageable pageable = PageRequest.of(from / size, size);
         return categoryRepository.findAll(pageable)
                 .stream()
@@ -79,18 +76,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDto getCategoryByIdPublic(Long catId) {
-        Category category = categoryRepository.findCategoryById(catId);
-        if (category == null) {
-            throw new NotFoundException("Required object was not found.");
-        }
-        return CategoryMapper.toCategoryDto(category);
+        return CategoryMapper.toCategoryDto(getCategoryById(catId));
     }
 
-    private Category getCategory(Long categoryId) {
-        Category category = categoryRepository.getById(categoryId);
-        if (category == null) {
+    public Category getCategoryById(Long catId) {
+        return categoryRepository.findById(catId).orElseThrow(() -> {
             throw new NotFoundException("Category not found.");
-        }
-        return category;
+        });
     }
 }

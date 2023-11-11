@@ -34,7 +34,8 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     public List<ParticipationRequestDto> getParticipationRequest(Long userId) {
         userService.getUserById(userId);
-        List<Long> eventIds = eventRepository.getEventsByInitiatorId(userId).stream()
+        List<Long> eventIds = eventRepository.getEventsByInitiatorId(userId)
+                .stream()
                 .map(Event::getId)
                 .collect(Collectors.toList());
         if (eventIds.isEmpty()) {
