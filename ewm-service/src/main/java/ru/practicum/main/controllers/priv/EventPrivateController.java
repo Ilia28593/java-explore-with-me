@@ -1,6 +1,7 @@
 package ru.practicum.main.controllers.priv;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +26,14 @@ public class EventPrivateController {
     @PostMapping
     public ResponseEntity<EventFullDto> addEvent(@Positive @PathVariable Long userId,
                                                  @NotNull @Valid @RequestBody NewEventDto newEventDto) {
-        return ResponseEntity.ok(eventService.addEventPrivate(userId, newEventDto));
+        return new ResponseEntity<>(eventService.addEventPrivate(userId, newEventDto), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<EventShortDto>> getEvents(@NotNull @Positive @PathVariable(required = false) Long userId,
                                                          @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                          @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return new ResponseEntity<>(eventService.addEventPrivate(userId, newEventDto), HttpStatus.CREATED);
+        return ResponseEntity.ok(eventService.getEventsPrivate(userId, from, size));
     }
 
     @GetMapping("/{eventId}")
@@ -57,8 +58,8 @@ public class EventPrivateController {
     @PatchMapping("/{eventId}/requests")
     public ResponseEntity<EventRequestStatusUpdateResult> updateEventRequestStatus(@Positive @PathVariable Long userId,
                                                                                    @Positive @PathVariable Long eventId,
-                                                                                   @Valid @RequestBody EventRequestStatusUpdateRequest
-                                                                                           eventRequestStatusUpdateRequest) {
-        return ResponseEntity.ok(eventService.updateEventRequestStatusPrivate(userId, eventId, eventRequestStatusUpdateRequest));
+                                                                                   @Valid @RequestBody EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
+        return new ResponseEntity<>(eventService.updateEventRequestStatusPrivate(
+                userId, eventId, eventRequestStatusUpdateRequest), HttpStatus.OK);
     }
 }
