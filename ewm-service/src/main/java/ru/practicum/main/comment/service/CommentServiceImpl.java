@@ -18,6 +18,7 @@ import ru.practicum.main.user.service.UserService;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.practicum.main.constant.Constants.timeNow;
@@ -44,18 +45,18 @@ public class CommentServiceImpl implements CommentService {
         User user = userService.getUserById(commentDto.getAuthor());
         Event event = eventService.getEventFindBuId(commentDto.getEvent());
         if (!commentRepository.getCommentById(commentId).getAuthor().getId().equals(commentDto.getAuthor())) {
-            throw new NotFoundException("The user has no comment.");
+            throw new NotFoundException("User has no comment.");
         }
         Comment actualComment = CommentMapper.toComment(commentDto, user, event);
         Comment comment = getComment(commentId);
         actualComment.setId(comment.getId());
 
-        if (actualComment.getText() == null || actualComment.getText().isBlank()) {
+        if (Objects.isNull(actualComment.getText()) || actualComment.getText().isBlank()) {
             actualComment.setText(comment.getText());
         } else {
             actualComment.setText(actualComment.getText());
         }
-        if (actualComment.getCreatedOn() == null) {
+        if (Objects.isNull(actualComment.getCreatedOn())) {
             actualComment.setCreatedOn(comment.getCreatedOn());
         } else {
             actualComment.setCreatedOn(actualComment.getCreatedOn());
@@ -74,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
         if (commentsDto.isEmpty()) {
-            throw new NotFoundException("The event has no comments.");
+            throw new NotFoundException("Event has no comments.");
         } else {
             return commentsDto;
         }
@@ -91,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
     public void deleteCommentByIdForUser(Long userId, Long commentId) {
         Comment comment = getComment(commentId);
         if (!comment.getAuthor().getId().equals(userId)) {
-            throw new IllegalArgumentException("The user has no comments.");
+            throw new IllegalArgumentException("User has no comments.");
         } else {
             commentRepository.deleteById(commentId);
         }
@@ -108,8 +109,8 @@ public class CommentServiceImpl implements CommentService {
             throw new NotFoundException("The event has no comments.");
         } else {
             return commentsDto.stream()
-                    .map((CommentDto commentDto) -> CommentMapper.toCommentWithFullAuthorDto(commentDto,
-                            userService.getUserById(commentDto.getAuthor())))
+                    .map((CommentDto commentDto) ->
+                            CommentMapper.toCommentWithFullAuthorDto(commentDto, userService.getUserById(commentDto.getAuthor())))
                     .collect(Collectors.toList());
         }
     }

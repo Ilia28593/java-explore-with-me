@@ -1,13 +1,14 @@
 package ru.practicum.main.comment.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import ru.practicum.main.user.model.User;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 public class CommentWithFullAuthorDto {
     private Long id;
