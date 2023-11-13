@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.category.model.Category;
-import ru.practicum.main.category.repository.CategoryRepository;
+import ru.practicum.main.category.service.CategoryServiceImpl;
 import ru.practicum.main.event.dto.*;
 import ru.practicum.main.event.mapper.EventMapper;
 import ru.practicum.main.event.model.Event;
@@ -17,7 +17,7 @@ import ru.practicum.main.event.model.Status;
 import ru.practicum.main.event.repository.EventRepository;
 import ru.practicum.main.exception.*;
 import ru.practicum.main.location.model.Location;
-import ru.practicum.main.location.repository.LocationRepository;
+import ru.practicum.main.location.service.LocationServiceImpl;
 import ru.practicum.main.participation.dto.ParticipationRequestDto;
 import ru.practicum.main.participation.mapper.ParticipationMapper;
 import ru.practicum.main.participation.model.ParticipationRequest;
@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.practicum.main.constant.Constants.DATE_FORMAT;
@@ -42,15 +43,22 @@ import static ru.practicum.main.constant.Constants.DATE_FORMAT;
 @AllArgsConstructor
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryServiceImpl categoryService;
     private final UserServiceImpl userService;
     private final ParticipationRepository participationRepository;
-    private final LocationRepository locationRepository;
+    private final LocationServiceImpl locationService;
     private final StatsClient statsClient;
+
+
+    @Override
+    public Event getEventFindBuId(Long eventId) {
+        return getEvent(eventRepository.findById(eventId));
+    }
 
     @Transactional
     @Override
     public List<EventShortDto> getEventsPrivate(Long userId, Integer from, Integer size) {
+
         Pageable pageable = PageRequest.of(from / size, size);
         return eventRepository.getEventsByInitiatorId(userId, pageable)
                 .stream()
@@ -67,9 +75,9 @@ public class EventServiceImpl implements EventService {
         if (start.isBefore(LocalDateTime.now().plusHours(2))) {
             throw new IllegalArgumentException("The start time is specified incorrectly");
         }
-        Location location = locationRepository.save(newEventDto.getLocation());
+        Location location = locationService.save(newEventDto.getLocation());
         newEventDto.setLocation(location);
-        Category category = categoryRepository.getById(newEventDto.getCategory());
+        Category category = categoryService.getCategoryById(newEventDto.getCategory());
         User user = userService.getUserById(userId);
 
         Event event = EventMapper.toEvent(newEventDto, user, category);
@@ -79,12 +87,12 @@ public class EventServiceImpl implements EventService {
     @Transactional
     @Override
     public EventFullDto getEventPrivate(Long userId, Long eventId) {
-        return EventMapper.toEventFullDto(getEventById(userId, eventId));
+        return EventMapper.toEventFullDto(getEvent(eventRepository.getEventsByIdAndInitiatorId(eventId, userId)));
     }
 
-    public Event getEventById(Long userId, Long eventId) {
-        return eventRepository.getEventsByIdAndInitiatorId(eventId, userId).orElseThrow(() -> {
-            throw new NotFoundException("Event not found.");
+    private Event getEvent(Optional<Event> eventRepository) {
+        return eventRepository.orElseThrow(() -> {
+            throw new NotFoundException("The event not found.");
         });
     }
 
@@ -92,9 +100,18 @@ public class EventServiceImpl implements EventService {
     @Transactional
     @Override
     public EventFullDto updateEventPrivate(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest) {
-        Event oldEvent = getEventById(userId, eventId);
+        Event oldEvent = eventRepository.getEventsByIdAndInitiatorId(eventId, userId).get();
+
         validateUpdateEventPrivate(oldEvent, updateEventUserRequest);
-        Category newCategory = getCategory(updateEventUserRequest, oldEvent);
+
+        if (updateEventUserRequest.getLocation() != null) {
+            Location location = locationService.save(updateEventUserRequest.getLocation());
+            updateEventUserRequest.setLocation(location);
+        }
+
+        Category newCategory = updateEventUserRequest.getCategory() == null ?
+                oldEvent.getCategory() : categoryService.getCategoryById(updateEventUserRequest.getCategory());
+
         Event upEvent = oldEvent;
         if (updateEventUserRequest.getStateAction() != null) {
             if (updateEventUserRequest.getStateAction().equals("SEND_TO_REVIEW")) {
@@ -111,11 +128,11 @@ public class EventServiceImpl implements EventService {
 
     private Category getCategory(UpdateEventUserRequest updateEventUserRequest, Event oldEvent) {
         if (updateEventUserRequest.getLocation() != null) {
-            Location location = locationRepository.save(updateEventUserRequest.getLocation());
+            Location location = locationService.save(updateEventUserRequest.getLocation());
             updateEventUserRequest.setLocation(location);
         }
         return updateEventUserRequest.getCategory() == null ?
-                oldEvent.getCategory() : categoryRepository.getById(updateEventUserRequest.getCategory());
+                oldEvent.getCategory() : categoryService.getCategoryById(updateEventUserRequest.getCategory());
     }
 
     private void validateUpdateEventPrivate(Event oldEvent, UpdateEventUserRequest updateEventUserRequest) {
@@ -145,7 +162,9 @@ public class EventServiceImpl implements EventService {
     public EventRequestStatusUpdateResult updateEventRequestStatusPrivate(Long userId,
                                                                           Long eventId,
                                                                           EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
-        Event event = getEventById(userId, eventId);
+        Event event = eventRepository.getEventsByIdAndInitiatorId(eventId, userId).orElseThrow(() -> {
+            throw new NotFoundException(String.format("The event not found by event id %s ana user id %s.", eventId, userId));
+        });
         if (Long.valueOf(event.getParticipantLimit()).equals(event.getConfirmedRequests())) {
             throw new OverflowLimitException("Cannot exceed the number of participants.");
         }
@@ -217,7 +236,9 @@ public class EventServiceImpl implements EventService {
             listDtoReject = list.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
             return new EventRequestStatusUpdateResult(new ArrayList<>(), listDtoReject);
         }
-        return null;
+        listDto = listPending.stream().map(ParticipationMapper::toParticipationRequestDto).collect(Collectors.toList());
+        return new EventRequestStatusUpdateResult(listDto, new ArrayList<>());
+
     }
 
 
@@ -333,18 +354,9 @@ public class EventServiceImpl implements EventService {
     @Transactional
     @Override
     public EventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
-        Event oldEvent = eventRepository.getEventsById(eventId);
-
+        Event oldEvent = getEventFindBuId(eventId);
         validateUpdateEventAdmin(oldEvent, updateEventAdminRequest);
-
-        if (updateEventAdminRequest.getLocation() != null) {
-            Location location = locationRepository.save(updateEventAdminRequest.getLocation());
-            updateEventAdminRequest.setLocation(location);
-        }
-
-        Category newCategory = updateEventAdminRequest.getCategory() == null ?
-                oldEvent.getCategory() : categoryRepository.getById(updateEventAdminRequest.getCategory());
-
+        Category newCategory = getCategory(updateEventAdminRequest, oldEvent);
         Event upEvent = oldEvent;
         if (updateEventAdminRequest.getStateAction() != null) {
             if (updateEventAdminRequest.getStateAction().equals("PUBLISH_EVENT")) {
@@ -358,16 +370,20 @@ public class EventServiceImpl implements EventService {
             }
         }
         upEvent.setId(eventId);
-
         return EventMapper.toEventFullDto(eventRepository.save(upEvent));
+    }
+
+    private Category getCategory(UpdateEventAdminRequest updateEventAdminRequest, Event oldEvent) {
+        if (updateEventAdminRequest.getLocation() != null) {
+            Location location = locationService.save(updateEventAdminRequest.getLocation());
+            updateEventAdminRequest.setLocation(location);
+        }
+        return updateEventAdminRequest.getCategory() == null ?
+                oldEvent.getCategory() : categoryService.getCategoryById(updateEventAdminRequest.getCategory());
     }
 
 
     private void validateUpdateEventAdmin(Event oldEvent, UpdateEventAdminRequest updateEventAdminRequest) {
-        if (oldEvent == null) {
-            throw new NotFoundException("Event not found.");
-        }
-
         LocalDateTime start = oldEvent.getEventDate();
         if (oldEvent.getPublishedOn() != null && start.isAfter(oldEvent.getPublishedOn().plusHours(1))) {
             throw new EventDateException("Start time is before event date");
@@ -379,7 +395,6 @@ public class EventServiceImpl implements EventService {
                 throw new IllegalArgumentException("Start time before or equals event date");
             }
         }
-
         if (oldEvent.getState() != null && !oldEvent.getState().equals(State.PENDING) && updateEventAdminRequest.getStateAction().equals("PUBLISH_EVENT")) {
             throw new StateArgumentException("Wrong state: PUBLISHED OR CANCELED");
         }
@@ -455,21 +470,14 @@ public class EventServiceImpl implements EventService {
                 }
             }
         }
-
         EndpointHitDto endpointHitDto = new EndpointHitDto(null, "main-service", request.getRequestURI(),
                 request.getRemoteAddr(), timeNow.format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
-
         try {
             statsClient.addRequest(request.getRemoteAddr(), endpointHitDto);
         } catch (
                 RuntimeException e) {
             throw new IllegalArgumentException(e.getLocalizedMessage());
         }
-
-        if (list.isEmpty()) {
-            return new ArrayList<>();
-        }
-
         return list.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
     }
 
@@ -490,7 +498,6 @@ public class EventServiceImpl implements EventService {
             event.setViews(event.getViews() + 1);
             eventRepository.save(event);
         }
-
         EndpointHitDto endpointHitDto = new EndpointHitDto(null,
                 "main-service",
                 request.getRequestURI(),
@@ -498,7 +505,6 @@ public class EventServiceImpl implements EventService {
                 timeNow);
 
         statsClient.addRequest(request.getRemoteAddr(), endpointHitDto);
-
         return EventMapper.toEventFullDto(event);
     }
 }

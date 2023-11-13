@@ -1,7 +1,7 @@
 package ru.practicum.main.controllers.pub;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +12,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
+@Slf4j
 @Validated
 @RestController
 @AllArgsConstructor
@@ -23,11 +24,13 @@ public class CategoryPublicController {
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getCategoryPublic(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                                @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return new ResponseEntity<>(categoryService.getCategoryPublic(from, size), HttpStatus.OK);
+        log.info("Get request received category.");
+        return ResponseEntity.ok(categoryService.getCategoryPublic(from, size));
     }
 
     @GetMapping("/{catId}")
     public ResponseEntity<CategoryDto> getCategoryByIdPublic(@Positive @PathVariable Long catId) {
-        return new ResponseEntity<>(categoryService.getCategoryByIdPublic(catId), HttpStatus.OK);
+        log.info("Get request received category by id.");
+        return ResponseEntity.ok(categoryService.getCategoryByIdPublic(catId));
     }
 }

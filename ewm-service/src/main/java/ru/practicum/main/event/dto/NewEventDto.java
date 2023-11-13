@@ -30,19 +30,13 @@ public class NewEventDto {
     @NotNull
     @NotBlank
     private String eventDate;
-
     @NotNull
     private Location location;
-
     private Boolean paid;
-
     private Integer participantLimit;
-
     private Boolean requestModeration;
-
     @NotNull
     @NotBlank
-    @Size(min = 3)
-    @Size(max = 120)
+    @Size(min = 3, max = 120)
     private String title;
 }
