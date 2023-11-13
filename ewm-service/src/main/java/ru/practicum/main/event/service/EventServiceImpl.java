@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.category.model.Category;
-import ru.practicum.main.category.repository.CategoryRepository;
+import ru.practicum.main.category.service.CategoryServiceImpl;
 import ru.practicum.main.event.dto.*;
 import ru.practicum.main.event.mapper.EventMapper;
 import ru.practicum.main.event.model.Event;
@@ -43,7 +43,7 @@ import static ru.practicum.main.constant.Constants.DATE_FORMAT;
 @AllArgsConstructor
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryServiceImpl categoryRepository;
     private final UserServiceImpl userService;
     private final ParticipationRepository participationRepository;
     private final LocationRepository locationRepository;
@@ -77,7 +77,7 @@ public class EventServiceImpl implements EventService {
         }
         Location location = locationRepository.save(newEventDto.getLocation());
         newEventDto.setLocation(location);
-        Category category = categoryRepository.getById(newEventDto.getCategory());
+        Category category = categoryRepository.getCategoryById(newEventDto.getCategory());
         User user = userService.getUserById(userId);
 
         Event event = EventMapper.toEvent(newEventDto, user, category);
@@ -110,7 +110,7 @@ public class EventServiceImpl implements EventService {
         }
 
         Category newCategory = updateEventUserRequest.getCategory() == null ?
-                oldEvent.getCategory() : categoryRepository.getById(updateEventUserRequest.getCategory());
+                oldEvent.getCategory() : categoryRepository.getCategoryById(updateEventUserRequest.getCategory());
 
         Event upEvent = oldEvent;
         if (updateEventUserRequest.getStateAction() != null) {
@@ -132,7 +132,7 @@ public class EventServiceImpl implements EventService {
             updateEventUserRequest.setLocation(location);
         }
         return updateEventUserRequest.getCategory() == null ?
-                oldEvent.getCategory() : categoryRepository.getById(updateEventUserRequest.getCategory());
+                oldEvent.getCategory() : categoryRepository.getCategoryById(updateEventUserRequest.getCategory());
     }
 
     private void validateUpdateEventPrivate(Event oldEvent, UpdateEventUserRequest updateEventUserRequest) {
@@ -381,7 +381,7 @@ public class EventServiceImpl implements EventService {
             updateEventAdminRequest.setLocation(location);
         }
         return updateEventAdminRequest.getCategory() == null ?
-                oldEvent.getCategory() : categoryRepository.getById(updateEventAdminRequest.getCategory());
+                oldEvent.getCategory() : categoryRepository.getCategoryById(updateEventAdminRequest.getCategory());
     }
 
 

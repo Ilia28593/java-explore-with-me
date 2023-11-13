@@ -6,7 +6,7 @@ import ru.practicum.main.comment.model.Comment;
 import ru.practicum.main.event.model.Event;
 import ru.practicum.main.user.model.User;
 
-import static ru.practicum.main.constant.Constants.timeNow;
+import static ru.practicum.main.constant.CurrentDateTime.timeNow;
 
 public class CommentMapper {
 

@@ -20,7 +20,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.main.constant.Constants.timeNow;
+import static ru.practicum.main.constant.CurrentDateTime.timeNow;
 
 @Slf4j
 @Service
