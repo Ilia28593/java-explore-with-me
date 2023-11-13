@@ -162,11 +162,9 @@ public class EventServiceImpl implements EventService {
     public EventRequestStatusUpdateResult updateEventRequestStatusPrivate(Long userId,
                                                                           Long eventId,
                                                                           EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
-        Optional<Event> event1 = eventRepository.getEventsByIdAndInitiatorId(eventId, userId);
-        if (event1 == null) {
-            throw new NotFoundException("The event not found.");
-        }
-        Event event = event1.get();
+        Event event = eventRepository.getEventsByIdAndInitiatorId(eventId, userId).orElseThrow(() -> {
+            throw new NotFoundException(String.format("The event not found by event id %s ana user id %s.", eventId, userId);
+        });
         if (Long.valueOf(event.getParticipantLimit()).equals(event.getConfirmedRequests())) {
             throw new OverflowLimitException("Cannot exceed the number of participants.");
         }
@@ -496,7 +494,6 @@ public class EventServiceImpl implements EventService {
 
         ResponseEntity<Object> response = statsClient.getStats(request.getRequestURI(), timeStart, timeNow, uris, true);
         List<ViewStats> resp = (List<ViewStats>) response.getBody();
-        assert resp != null;
         if (resp.size() == 0) {
             event.setViews(event.getViews() + 1);
             eventRepository.save(event);
