@@ -31,5 +31,6 @@ API основного сервиса состоит из 3 частей:
   Файл спецификации сервиса статистики [ewm-stats-service.json].
 ___
 Используемые технологии : Maven, Spring-boot, jpa-hibernate, Docker, PostgreSQL, Lombok.
+Запуск сервисов можно произвести через [docker-compose.yml].
 ___
  Разработчи Ситник И.О.
