@@ -31,10 +31,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDto addCategoryAdmin(NewCategoryDto newCategoryDto) {
+        log.info("Adding request a new category.");
         Category category = CategoryMapper.toCategory(newCategoryDto);
         try {
             return CategoryMapper.toCategoryDto(categoryRepository.save(category));
         } catch (DataIntegrityViolationException e) {
+            log.info("error adding request a new category.");
             throw new DuplicateNameException("Duplicate category name");
         }
     }
@@ -42,12 +44,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDto updateCategoryAdmin(Long catId, NewCategoryDto newCategoryDto) {
+        log.info("Updating request category.");
         getCategoryById(catId);
         Category newCategory = CategoryMapper.toCategory(newCategoryDto);
         newCategory.setId(catId);
         try {
             return CategoryMapper.toCategoryDto(categoryRepository.saveAndFlush(newCategory));
         } catch (DataIntegrityViolationException e) {
+            log.info("Error updating request category.");
             throw new DuplicateNameException("Duplicate category name");
         }
     }
@@ -55,8 +59,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public void deleteCategoryAdmin(Long catId) {
+        log.info("Deleting request category.");
         getCategoryById(catId);
         if (eventRepository.findFirstByCategoryId(catId) != null) {
+            log.info("error deleting request category.");
             throw new ValidationCategoryException("The category has not been deleted.");
         }
         categoryRepository.deleteCategoryById(catId);
@@ -66,6 +72,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public List<CategoryDto> getCategoryPublic(Integer from, Integer size) {
+        log.info("Get request category.");
         Pageable pageable = PageRequest.of(from / size, size);
         return categoryRepository.findAll(pageable)
                 .stream()
@@ -76,6 +83,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDto getCategoryByIdPublic(Long catId) {
+        log.info("Get request category.");
         return CategoryMapper.toCategoryDto(getCategoryById(catId));
     }
 

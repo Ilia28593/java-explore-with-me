@@ -1,6 +1,7 @@
 package ru.practicum.main.controllers.pub;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static ru.practicum.main.constant.Constants.DATE_FORMAT;
 
+@Slf4j
 @Validated
 @RestController
 @AllArgsConstructor
@@ -40,6 +42,7 @@ public class EventPublicController {
                                                                                defaultValue = "0") Integer from,
                                                                        @Positive @RequestParam(name = "size",
                                                                                defaultValue = "10") Integer size) {
+        log.info("Get request received events and stats.");
         return ResponseEntity.ok(eventService.getEventsAndStatsPublic(request, text, categories, paid, rangeStart, rangeEnd,
                 onlyAvailable, sort, from, size));
     }
@@ -47,6 +50,7 @@ public class EventPublicController {
     @GetMapping("/{Id}")
     public ResponseEntity<EventFullDto> getEventByIdAndStatsPublic(HttpServletRequest request,
                                                                    @Positive @PathVariable("Id") Long eventId) {
+        log.info("Get request received events and stats by id.");
         return ResponseEntity.ok(eventService.getEventByIdAndStatsPublic(request, eventId));
     }
 }
